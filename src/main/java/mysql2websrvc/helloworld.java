@@ -7,17 +7,17 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileReader;
 import java.io.IOException;
 
 
+
+
 // Importaciones para el parser json
 import com.google.gson.Gson;
-
 
 import org.apache.commons.codec.binary.Base64;
 // Restful
@@ -26,6 +26,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+
 
 
 //http
@@ -38,6 +40,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class helloworld {
 	public static void main (String [] args)
 	{
+		ArrayList<DataObject> jsonin;
 		
 		Jsonprototype j = new Jsonprototype ();
 		Gson gson = new Gson ();
@@ -58,15 +61,16 @@ public class helloworld {
 		//System.out.println (jsonString);
 		//System.exit (0);
 		
-		InputStreamReader isr = new InputStreamReader(System.in);
-		BufferedReader br = new BufferedReader (isr);
 		try{
-			System.out.println("hola\n");
+			System.out.println("Iniciando extraccion de datos");
+			System.out.println("-----------------------------");
+			
 			String sTexto;
 			//Conexion a MySql
-			//testConnect();
+			jsonin = ReadJsonfromMysql.ConectToDB();
 			//Conexion a servicio HTTP restful
-			httprestjava.HttpsClientC(jsonString);
+			if (jsonin != null)
+				httprestjava.HttpsClientC(jsonString);
 			System.out.println("FIN\n");
 			
 		}
@@ -94,7 +98,6 @@ public class helloworld {
 				System.out.println("Table name : " + tableName);
 				String dato = resultSet.getString("fws_eve_event");
 				System.out.println("Data : " + dato);
-				LeerJson(dato);
 			}
 			connection.close();
 		} catch (ClassNotFoundException e) {
@@ -102,16 +105,5 @@ public class helloworld {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static void LeerJson(String jsondata){
-		Gson gson = new Gson();
-		
-		DataObject obj = gson.fromJson(jsondata, DataObject.class);
-		
-		System.out.println("Parsing...");
-		System.out.println(obj);
-		
-		System.out.println("Done.");
 	}		
 }

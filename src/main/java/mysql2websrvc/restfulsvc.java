@@ -82,61 +82,11 @@ public class restfulsvc {
 	}
 	
 	public static String getB64Auth (String login, String pass) {
-		   String source=login+":"+pass;
-		   //String ret="Basic "+ Base64.encodeToString(source.getBytes(),Base64.URL_SAFE|Base64.NO_WRAP);
-		   String ret="Basic "+ Base64.encodeBase64String(source.getBytes());
+		   String source=login + ":" + pass;
+		   String ret="Basic " + Base64.encodeBase64String(source.getBytes());
 		   return ret;
 	}
 	
-	public static void testHTTPS(String[] args) throws MalformedURLException, IOException 
-	{
-		URL url = new URL(urlscope);
-		URLConnection con = url.openConnection();
-		 
-		Authenticator au = new Authenticator() {
-		@Override
-		protected PasswordAuthentication
-		getPasswordAuthentication() {
-			return new PasswordAuthentication("usuario", "clave".toCharArray());
-		}
-		      };
-		      Authenticator.setDefault(au);
-		 
-		      BufferedReader in = new BufferedReader(
-		         new InputStreamReader(con.getInputStream()));
-		 
-		      String linea;
-		      while ((linea = in.readLine()) != null) {
-		         System.out.println(linea);
-		      }
-	}
-	
-	public static void RestHttptest3(String dato) throws ClientProtocolException, IOException
-	{
-		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost(urlscope);
-		StringEntity input;
-		
-		input = new StringEntity("product");
-		
-		post.setEntity(input);
-		HttpResponse response;
-		
-			response = client.execute(post);
-		
-		BufferedReader rd;
-		rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-		
-		String line = "";
-		try {
-			while ((line = rd.readLine()) != null) {
-				System.out.println(line);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 		public static void RestJersey(String string) {
 		 
 		try {
