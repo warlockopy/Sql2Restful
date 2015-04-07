@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import junit.framework.TestCase;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
