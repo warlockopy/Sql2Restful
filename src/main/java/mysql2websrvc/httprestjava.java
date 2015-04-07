@@ -18,6 +18,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -33,7 +34,7 @@ public class httprestjava {
 	public static String username = "PYLS", password = "Dn1f8C5XeJj42AzG";
 	
 	
-	public static void HttpsClientC(String dato) throws Exception {
+	public static void HttpsClientC(String datoJson) throws Exception {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpPost post = new HttpPost(urlscope);
 		String mydatetime, auheader;
@@ -47,6 +48,11 @@ public class httprestjava {
 		
 		post.addHeader("Authorization", "Basic " + encodedaut);
 		post.addHeader("date", mydatetime);
+		
+		StringEntity input = new StringEntity(datoJson);
+		input.setContentType("application/json");
+		post.setEntity(input);
+		
 		
 		CloseableHttpResponse response = httpclient.execute(post); 
 		try {

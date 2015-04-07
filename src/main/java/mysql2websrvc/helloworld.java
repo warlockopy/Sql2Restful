@@ -38,15 +38,35 @@ import javax.net.ssl.HttpsURLConnection;
 public class helloworld {
 	public static void main (String [] args)
 	{
+		
+		Jsonprototype j = new Jsonprototype ();
+		Gson gson = new Gson ();
+		
+		MessagesPostPrototype msg1 = new MessagesPostPrototype ();
+		MessagesPostPrototype msg2 = new MessagesPostPrototype ();
+		MessagesPostPrototype msg3 = new MessagesPostPrototype ();
+		
+		ResponsePrototype response = new ResponsePrototype ();
+		msg1.setBody(j);
+		
+		response.addMessage (msg1);
+		response.addMessage (msg2); 
+		response.addMessage (msg3); 
+		
+		String jsonString = gson.toJson (response);
+		
+		//System.out.println (jsonString);
+		//System.exit (0);
+		
 		InputStreamReader isr = new InputStreamReader(System.in);
 		BufferedReader br = new BufferedReader (isr);
 		try{
 			System.out.println("hola\n");
 			String sTexto;
 			//Conexion a MySql
-			testConnect();
+			//testConnect();
 			//Conexion a servicio HTTP restful
-			httprestjava.HttpsClientC("test");
+			httprestjava.HttpsClientC(jsonString);
 			System.out.println("FIN\n");
 			
 		}
