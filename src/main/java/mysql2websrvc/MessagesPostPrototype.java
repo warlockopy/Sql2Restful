@@ -24,7 +24,7 @@ public class MessagesPostPrototype {
 	public MessagesPostPrototype (MessagesPostPrototype other){
 		id = other.getId ();
 		unit_id = other.getUnitId ();
-		template_id = other.getId ();
+		template_id = other.getTemplateId ();
 		body = other.getBody ();
 	}
 	//*/

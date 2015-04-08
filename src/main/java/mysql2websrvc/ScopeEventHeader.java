@@ -12,7 +12,7 @@ public class ScopeEventHeader {
 	public int Odometer;
 	public int InputStatus;
 	public int OutputStatus;
-	public int DriverJeyCode;
+	public int DriverKeyCode;
 	public int Source;
 	public int GeneralStatus;
 	public int TripSpeedSource = 0;

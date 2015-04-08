@@ -45,6 +45,7 @@ public class httprestjava {
 		
 		auheader =  username + ":" + password;
 		String encodedaut = Base64.encodeBase64String(auheader.getBytes());
+
 		
 		post.addHeader("Authorization", "Basic " + encodedaut);
 		post.addHeader("date", mydatetime);

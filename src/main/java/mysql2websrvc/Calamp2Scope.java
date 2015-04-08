@@ -15,21 +15,23 @@ public static String Migrate(ArrayList <DataObject> datos) throws ParseException
 	MessageContents calampmsg;
 	Gson gson = new Gson ();
 	
-	MessagesPostPrototype msgtmp = new MessagesPostPrototype ();
+	
 	ResponsePrototype response = new ResponsePrototype ();
 
 	
 	for (int i=0; i < datos.size(); i++){
+		MessagesPostPrototype msgtmp = new MessagesPostPrototype ();
 		calampmsg = datos.get(i).getMessageContents();
 		
 		String unitid = datos.get(i).getOptionsHeader().getMobileId();; 
 		perpostmp.header.UnitId = unitid;
 		msgtmp.setUnitId(unitid);
 		msgtmp.setTemplateId(1);
-		perpostmp.header.Description = "Periodic position";
+		perpostmp.header.Description = "PeriodicPosition";
 		
 		SimpleDateFormat sdfu  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 	    Date udate = sdfu.parse(calampmsg.getTimeOfFix());
+	    
 	    long timeInMillisSinceEpoch123 = udate.getTime(); 
 	    long durationinSeconds2 = timeInMillisSinceEpoch123 / 1000;
 		perpostmp.header.UtcTimestampSeconds = durationinSeconds2;
