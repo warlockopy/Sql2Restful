@@ -60,6 +60,15 @@ public class httprestjava {
 			System.out.println(response.getProtocolVersion());
 			System.out.println(response.getStatusLine().getStatusCode());
 			System.out.println(response.getStatusLine().getReasonPhrase());
+			
+			BufferedReader br = new BufferedReader(
+				new InputStreamReader((response.getEntity().getContent())));
+
+				String output;
+				System.out.println("Output from Server .... \n");
+				while ((output = br.readLine()) != null)
+					System.out.println(output);
+			
 		} finally {
 			response.close();
 		}

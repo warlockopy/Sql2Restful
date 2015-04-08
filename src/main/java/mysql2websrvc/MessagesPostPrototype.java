@@ -20,6 +20,16 @@ public class MessagesPostPrototype {
 		
 	}
 	
+	//*
+	public MessagesPostPrototype (MessagesPostPrototype other){
+		id = other.getId ();
+		unit_id = other.getUnitId ();
+		template_id = other.getId ();
+		body = other.getBody ();
+	}
+	//*/
+	
+	
 	void setId (int id){
 		this.id = id;
 	}
@@ -37,4 +47,9 @@ public class MessagesPostPrototype {
 		String tmp = gson.toJson (o);
 		body = Base64.encodeBase64String(tmp.getBytes());
 	}
+	
+	public int getId () { return id; }
+	public int getTemplateId () { return template_id; }
+	public String getUnitId () { return unit_id; }
+	public String getBody () { return body; }
 }

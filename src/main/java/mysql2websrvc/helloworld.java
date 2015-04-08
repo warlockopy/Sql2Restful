@@ -8,10 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileReader;
 import java.io.IOException;
+
 
 
 
@@ -30,6 +32,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 
 
+
 //http
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -41,26 +44,7 @@ public class helloworld {
 	public static void main (String [] args)
 	{
 		ArrayList<DataObject> jsonin;
-		
-		Jsonprototype j = new Jsonprototype ();
-		Gson gson = new Gson ();
-		
-		MessagesPostPrototype msg1 = new MessagesPostPrototype ();
-		MessagesPostPrototype msg2 = new MessagesPostPrototype ();
-		MessagesPostPrototype msg3 = new MessagesPostPrototype ();
-		
-		ResponsePrototype response = new ResponsePrototype ();
-		msg1.setBody(j);
-		
-		response.addMessage (msg1);
-		response.addMessage (msg2); 
-		response.addMessage (msg3); 
-		
-		String jsonString = gson.toJson (response);
-		
-		//System.out.println (jsonString);
-		//System.exit (0);
-		
+				
 		try{
 			System.out.println("Iniciando extraccion de datos");
 			System.out.println("-----------------------------");
@@ -69,8 +53,11 @@ public class helloworld {
 			//Conexion a MySql
 			jsonin = ReadJsonfromMysql.ConectToDB();
 			//Conexion a servicio HTTP restful
-			if (jsonin != null)
+			if (jsonin != null){
+				String jsonString;
+				jsonString = Calamp2Scope.Migrate(jsonin); 
 				httprestjava.HttpsClientC(jsonString);
+			}
 			System.out.println("FIN\n");
 			
 		}

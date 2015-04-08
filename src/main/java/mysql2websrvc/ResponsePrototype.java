@@ -21,8 +21,10 @@ public class ResponsePrototype {
 		}
 	}
 	
-	public void addMessage (MessagesPostPrototype msg){
-		msg.setId (messages.size () + 1);
-		messages.add (msg);
+	public void addMessage (final MessagesPostPrototype msg){
+		MessagesPostPrototype newMessage = new MessagesPostPrototype (msg);
+		
+		newMessage.setId (messages.size () + 1);
+		messages.add (newMessage);
 	}
 }
