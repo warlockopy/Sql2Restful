@@ -23,7 +23,7 @@ public static String Migrate(ArrayList <DataObject> datos) throws ParseException
 		MessagesPostPrototype msgtmp = new MessagesPostPrototype ();
 		calampmsg = datos.get(i).getMessageContents();
 		
-		String unitid = datos.get(i).getOptionsHeader().getMobileId();; 
+		String unitid = datos.get(i).getOptionsHeader().getMobileId(); 
 		perpostmp.header.UnitId = unitid;
 		msgtmp.setUnitId(unitid);
 		msgtmp.setTemplateId(1);

@@ -56,7 +56,7 @@ public class helloworld {
 			if (jsonin != null){
 				String jsonString;
 				jsonString = Calamp2Scope.Migrate(jsonin); 
-				httprestjava.HttpsClientC(jsonString);
+				//httprestjava.HttpsClientC(jsonString);
 			}
 			System.out.println("FIN\n");
 			
