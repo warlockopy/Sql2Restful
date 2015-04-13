@@ -1,5 +1,6 @@
 package mysql2websrvc;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,31 +13,79 @@ import com.google.gson.Gson;
 public class ReadJsonfromMysql {
 	private static String dbUrl = "jdbc:mysql://209.208.110.219/f_workstation";
 	private static String dbClass = "com.mysql.jdbc.Driver";
-	private static String query = "Select * from fws_event";
 	private static String username = "root";
 	private static String password = "Base.2015";
 	private static ArrayList <DataObject> mysqljsonobject;
+	private static ArrayList <BigInteger> eventIdList;
+	
+	private static Connection connection;
+	private static Statement statement;
+	
+	
+	public static void open (){
+		try {
+			Class.forName(dbClass);
+			connection = DriverManager.getConnection(dbUrl, username, password);
+			statement = connection.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void deleteData (){
+		for (BigInteger eventId : eventIdList){
+			String deleteTableSQL = "DELETE FROM fws_event WHERE fws_eve_id = " + eventId;
+			
+			try {
+				statement.execute (deleteTableSQL);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static ArrayList <BigInteger> getEventIdList (){
+		return eventIdList;
+	}
+	
+	public static void close (){
+		try {
+			connection.close ();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	public static ArrayList<DataObject> ConectToDB(){
+		String query = "Select * from fws_event";
 		try {
 			//Se conecta a la base de datos
-			Class.forName(dbClass);
-			Connection connection = DriverManager.getConnection(dbUrl, username, password);
-			Statement statement = connection.createStatement();
+			//Class.forName(dbClass);
+			//Connection connection = DriverManager.getConnection(dbUrl, username, password);
+			//Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(query);
 			mysqljsonobject = new ArrayList();
 			//Extrae los datos
-			while (resultSet.next()) {
+			eventIdList = new ArrayList ();
+			
+			while (resultSet.next()) {				
 				String tableName = resultSet.getString(1);
 				System.out.println("Table name : " + tableName);
 				String dato = resultSet.getString("fws_eve_event");
+				String eveIdString = resultSet.getString ("fws_eve_id");
+				BigInteger eventId = new BigInteger (eveIdString);
+				eventIdList.add (eventId);
 				System.out.println("Data : " + dato);
 				mysqljsonobject.add(Json2Obj(dato));
 			}
-			connection.close();
+			
+			//connection.close();
 			return mysqljsonobject;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

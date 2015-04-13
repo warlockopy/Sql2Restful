@@ -49,15 +49,17 @@ public class helloworld {
 			System.out.println("Iniciando extraccion de datos");
 			System.out.println("-----------------------------");
 			
-			String sTexto;
 			//Conexion a MySql
+			ReadJsonfromMysql.open();
 			jsonin = ReadJsonfromMysql.ConectToDB();
 			//Conexion a servicio HTTP restful
 			if (jsonin != null){
-				String jsonString;
-				jsonString = Calamp2Scope.Migrate(jsonin); 
+				//String jsonString;
+				//jsonString = Calamp2Scope.Migrate(jsonin); 
 				//httprestjava.HttpsClientC(jsonString);
+				ReadJsonfromMysql.deleteData();
 			}
+			ReadJsonfromMysql.close();
 			System.out.println("FIN\n");
 			
 		}
