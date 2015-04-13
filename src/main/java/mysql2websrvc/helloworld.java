@@ -45,6 +45,13 @@ public class helloworld {
 	{
 		ArrayList<DataObject> jsonin;
 				
+		/*
+		UdpServer server = new UdpServer ();
+		
+		server.readIncomingData(5000);
+		*/
+		
+		//*
 		try{
 			System.out.println("Iniciando extraccion de datos");
 			System.out.println("-----------------------------");
@@ -52,11 +59,12 @@ public class helloworld {
 			//Conexion a MySql
 			ReadJsonfromMysql.open();
 			jsonin = ReadJsonfromMysql.ConectToDB();
+			System.out.println("SQL Ok.");
 			//Conexion a servicio HTTP restful
 			if (jsonin != null){
-				//String jsonString;
-				//jsonString = Calamp2Scope.Migrate(jsonin); 
-				//httprestjava.HttpsClientC(jsonString);
+				String jsonString;
+				jsonString = Calamp2Scope.Migrate(jsonin); 
+				httprestjava.HttpsClientC(jsonString);
 				ReadJsonfromMysql.deleteData();
 			}
 			ReadJsonfromMysql.close();
@@ -68,6 +76,7 @@ public class helloworld {
 			e.getStackTrace();
 			e.printStackTrace();
 		}
+		//*/
 	}
 	
 	public static void testConnect() {

@@ -1,4 +1,4 @@
-package mysql2websrvc;
+package mysql2websrvc.ScopePrototypes;
 
 public class ScopePeriodicPosition {
 	public ScopeEventHeader header;

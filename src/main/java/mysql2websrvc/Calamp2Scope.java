@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import mysql2websrvc.ScopePrototypes.ScopePeriodicPosition;
+
 import com.google.gson.Gson;
 
 public class Calamp2Scope {
