@@ -65,7 +65,7 @@ public class helloworld {
 				String jsonString;
 				jsonString = Calamp2Scope.Migrate(jsonin); 
 				httprestjava.HttpsClientC(jsonString);
-				ReadJsonfromMysql.deleteData();
+				//ReadJsonfromMysql.deleteData();
 			}
 			ReadJsonfromMysql.close();
 			System.out.println("FIN\n");

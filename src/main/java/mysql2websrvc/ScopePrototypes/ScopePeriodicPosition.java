@@ -9,4 +9,12 @@ public class ScopePeriodicPosition {
 	public ScopePeriodicPosition (){
 		header = new ScopeEventHeader ();
 	}
+	
+	public ScopePeriodicPosition (final ScopeEventHeader tmp){
+		header = new ScopeEventHeader (tmp);
+	}
+	
+	public void setHeader (final ScopeEventHeader tmp){
+		header.copyHeader(tmp);
+	}
 }

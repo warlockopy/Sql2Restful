@@ -1,29 +1,107 @@
 package mysql2websrvc;
 
+//import CalampEventCode.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 
-import mysql2websrvc.ScopePrototypes.ScopePeriodicPosition;
+import mysql2websrvc.ScopePrototypes.*;
 
 import com.google.gson.Gson;
 
 public class Calamp2Scope {
 public static String Migrate(ArrayList <DataObject> datos) throws ParseException {
 	String jsonstringfinal = "";
-	ScopePeriodicPosition perpostmp = new ScopePeriodicPosition ();
 	MessageContents calampmsg;
+	ScopeEventHeader headertmp = new ScopeEventHeader();
 	Gson gson = new Gson ();
-	
+	int codigoevento, eventocompleto;
 	
 	ResponsePrototype response = new ResponsePrototype ();
 
-	
 	for (int i=0; i < datos.size(); i++){
 		MessagesPostPrototype msgtmp = new MessagesPostPrototype ();
 		calampmsg = datos.get(i).getMessageContents();
+		codigoevento = Integer.parseInt(calampmsg.getEventCode());
+		eventocompleto = 0;
+						
+		SimpleDateFormat sdfu  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+	    Date udate = sdfu.parse(calampmsg.getTimeOfFix());
+	    
+	    long timeInMillisSinceEpoch123 = udate.getTime(); 
+	    long durationinSeconds2 = timeInMillisSinceEpoch123 / 1000;
+		headertmp.UtcTimestampSeconds = durationinSeconds2;
+		
+		headertmp.Latitude = Double.parseDouble(calampmsg.getLatitude());
+		headertmp.Longitude = Double.parseDouble(calampmsg.getLongitude());
+		
+		StringTokenizer st = new StringTokenizer (calampmsg.getSpeed ());
+		headertmp.Speed = (int) Double.parseDouble (st.nextToken ());
+		
+		headertmp.Direction = Integer.parseInt(calampmsg.getHeading());
+		headertmp.Odometer = 0;
+		
+		int bit0 = calampmsg.getInputs().getIgnition().compareTo("on") == 0 ? 1 : 0;
+		int bit1 = calampmsg.getInputs().getInput1().compareTo("on") == 0 ? 1 : 0;
+		int bit2 = calampmsg.getInputs().getInput2().compareTo("on") == 0 ? 1 : 0;
+		int bit3 = calampmsg.getInputs().getInput3().compareTo("on") == 0 ? 1 : 0;
+		int bit4 = calampmsg.getInputs().getInput4().compareTo("on") == 0 ? 1 : 0;
+		int bit5 = calampmsg.getInputs().getInput5().compareTo("on") == 0 ? 1 : 0;
+		int bit6 = calampmsg.getInputs().getInput6().compareTo("on") == 0 ? 1 : 0;
+		int bit7 = calampmsg.getInputs().getInput7().compareTo("on") == 0 ? 1 : 0;
+		
+		headertmp.InputStatus = (bit7 << 7) + (bit6 << 6) + (bit5 << 5) + (bit4 << 4)
+				        + (bit3 << 3) + (bit2 << 2) + (bit1 << 1) + bit0;
+		
+		//headertmp.OutputStatus = 
+		switch (codigoevento){
+			case CalampEventCode.PeriodicReport:
+				
+				
+				String unitid = datos.get(i).getOptionsHeader().getMobileId(); 
+				headertmp.UnitId = unitid;
+				msgtmp.setUnitId(unitid);
+				headertmp.Source = 0;
+				headertmp.TemplateId = 1;
+				msgtmp.setTemplateId(1);
+				headertmp.Description = "PeriodicPosition";
+				//perpostmp.header.copyHeader (headertmp);
+				ScopePeriodicPosition perpostmp = new ScopePeriodicPosition ();
+				perpostmp.setHeader(headertmp);
+				//perpostmp.header.UnitId = headertmp.UnitId;
+				msgtmp.setBody(perpostmp);
+				eventocompleto = 1;
+				break;
+			default:
+				System.out.println ("-----------------------------");
+				System.out.println ("Evento no encontrado : " + codigoevento);
+				System.out.println ("-----------------------------");
+				break;			
+		}
+		
+		
+		if (eventocompleto == 1) response.addMessage(msgtmp);
+		
+	}
+	jsonstringfinal = gson.toJson (response);
+	return jsonstringfinal;
+}
+public static String MigrateBackup(ArrayList <DataObject> datos) throws ParseException {
+	String jsonstringfinal = "";
+	ScopePeriodicPosition perpostmp = new ScopePeriodicPosition ();
+	MessageContents calampmsg;
+	ScopeEventHeader headertmp;
+	Gson gson = new Gson ();
+	int codigoevento;
+	
+	ResponsePrototype response = new ResponsePrototype ();
+
+	for (int i=0; i < datos.size(); i++){
+		MessagesPostPrototype msgtmp = new MessagesPostPrototype ();
+		calampmsg = datos.get(i).getMessageContents();
+		codigoevento = Integer.parseInt(calampmsg.getEventCode());
 		
 		String unitid = datos.get(i).getOptionsHeader().getMobileId(); 
 		perpostmp.header.UnitId = unitid;
