@@ -6,5 +6,8 @@ public class ScopeEngineStart {
 	public ScopeEngineStart (){
 		header = new ScopeEventHeader ();
 	}
-	
+
+	public void setHeader (final ScopeEventHeader tmp){
+		header.copyHeader(tmp);
+	}
 }

@@ -1,9 +1,14 @@
 package mysql2websrvc.ScopePrototypes;
 
-public class ScopeEngineStop {
+public class ScopeBatteryLow {
+
 	public ScopeEventHeader header;
+	public int temperature;
+	public int voltage;
+	public int battery_age;
+	public int charge_level_percentage;
 	
-	public ScopeEngineStop (){
+	public ScopeBatteryLow (){
 		header = new ScopeEventHeader ();
 	}
 	

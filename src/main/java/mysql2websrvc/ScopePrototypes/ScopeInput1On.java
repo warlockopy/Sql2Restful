@@ -1,10 +1,12 @@
 package mysql2websrvc.ScopePrototypes;
 
-public class ScopeExternalAlarmActive {
+public class ScopeInput1On {
 	
 	public ScopeEventHeader header;
+	public int duration_seconds;
+	public int delay_seconds;
 	
-	public ScopeExternalAlarmActive (){
+	public ScopeInput1On (){
 		header = new ScopeEventHeader ();
 	}
 	

@@ -18,8 +18,20 @@ import java.io.IOException;
 
 
 
+
+
+
+
+import ScopeProtoJava.EventHeaderProto.EventHeader;
+import ScopeProtoJava.PeriodicPositionProto;
+import ScopeProtoJava.PeriodicPositionProto.PeriodicPosition;
+
+
+
 // Importaciones para el parser json
 import com.google.gson.Gson;
+
+import mysql2websrvc.ScopePrototypes.ScopePeriodicPosition;
 
 import org.apache.commons.codec.binary.Base64;
 // Restful
@@ -28,6 +40,10 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+
+
+
 
 
 
@@ -56,17 +72,25 @@ public class helloworld {
 			System.out.println("Iniciando extraccion de datos");
 			System.out.println("-----------------------------");
 			
+			System.out.println("UTC"  + System.currentTimeMillis()/1000);
+			
 			//Conexion a MySql
 			ReadJsonfromMysql.open();
 			jsonin = ReadJsonfromMysql.ConectToDB();
 			System.out.println("SQL Ok.");
+			
 			//Conexion a servicio HTTP restful
 			if (jsonin != null){
 				String jsonString;
-				jsonString = Calamp2Scope.Migrate(jsonin); 
+				
+				jsonString = Calamp2Scope.toScopeString (jsonin);
+				//jsonString = Calamp2Scope.MigrateBackup (jsonin);
+				//jsonString = Calamp2Scope.getScopeString(jsonin);
+				
 				httprestjava.HttpsClientC(jsonString);
 				//ReadJsonfromMysql.deleteData();
 			}
+			
 			ReadJsonfromMysql.close();
 			System.out.println("FIN\n");
 			
@@ -91,13 +115,16 @@ public class helloworld {
 			Connection connection = DriverManager.getConnection(dbUrl, username, password);
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(query2);
+			
 			while (resultSet.next()) {
 				String tableName = resultSet.getString(1);
 				System.out.println("Table name : " + tableName);
 				String dato = resultSet.getString("fws_eve_event");
 				System.out.println("Data : " + dato);
 			}
+			
 			connection.close();
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

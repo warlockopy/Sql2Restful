@@ -10,4 +10,7 @@ public class ScopeExcessiveIdle {
 		header = new ScopeEventHeader ();
 	}
 
+	public void setHeader (final ScopeEventHeader tmp){
+		header.copyHeader(tmp);
+	}
 }

@@ -1,9 +1,9 @@
 package mysql2websrvc.ScopePrototypes;
 
-public class ScopeEngineActivadedWhileArmed {
+public class ScopeEngineActivatedWhileArmed {
 	public ScopeEventHeader header;
 	
-	public ScopeEngineActivadedWhileArmed (){
+	public ScopeEngineActivatedWhileArmed (){
 		header = new ScopeEventHeader ();
 	}
 

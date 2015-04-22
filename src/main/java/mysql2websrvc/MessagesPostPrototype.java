@@ -48,6 +48,10 @@ public class MessagesPostPrototype {
 		body = Base64.encodeBase64String(tmp.getBytes());
 	}
 	
+	public void setEncodedBody (final String body){
+		this.body = body;
+	}
+	
 	public int getId () { return id; }
 	public int getTemplateId () { return template_id; }
 	public String getUnitId () { return unit_id; }

@@ -1,9 +1,10 @@
 package mysql2websrvc.ScopePrototypes;
 
-public class ScopeEngineStop {
+public class ScopeNonTripPosition {
 	public ScopeEventHeader header;
+	public int sms_count;
 	
-	public ScopeEngineStop (){
+	public ScopeNonTripPosition (){
 		header = new ScopeEventHeader ();
 	}
 	

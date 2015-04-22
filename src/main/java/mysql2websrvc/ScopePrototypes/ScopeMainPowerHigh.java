@@ -1,9 +1,10 @@
 package mysql2websrvc.ScopePrototypes;
 
-public class ScopeEngineStop {
+public class ScopeMainPowerHigh {
+	
 	public ScopeEventHeader header;
 	
-	public ScopeEngineStop (){
+	public ScopeMainPowerHigh (){
 		header = new ScopeEventHeader ();
 	}
 	

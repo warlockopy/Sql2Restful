@@ -66,6 +66,7 @@ public class httprestjava {
 				new InputStreamReader((response.getEntity().getContent())));
 
 				String output;
+				
 				System.out.println("Output from Server .... \n");
 				while ((output = br.readLine()) != null)
 					System.out.println(output);

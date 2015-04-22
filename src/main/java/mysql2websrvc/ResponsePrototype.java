@@ -27,4 +27,8 @@ public class ResponsePrototype {
 		newMessage.setId (messages.size () + 1);
 		messages.add (newMessage);
 	}
+	
+	public int messagesCount (){
+		return messages.size ();
+	}
 }
