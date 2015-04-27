@@ -15,6 +15,7 @@ import ScopeProtoJava.EngineStartProto.EngineStart;
 import ScopeProtoJava.EngineStopProto.EngineStop;
 import ScopeProtoJava.EventHeaderProto.EventHeader;
 import ScopeProtoJava.ExcessiveIdleProto.ExcessiveIdle;
+import ScopeProtoJava.GeneralStatusTypeProto.GeneralStatusType;
 import ScopeProtoJava.MainPowerHighProto.MainPowerHigh;
 import ScopeProtoJava.MainPowerLowProto.MainPowerLow;
 import ScopeProtoJava.PeriodicPositionProto.PeriodicPosition;
@@ -177,6 +178,20 @@ public static String MigrateBackup(ArrayList <DataObject> datos) throws ParseExc
 	System.err.println (jsonstringfinal);
 	
 	return jsonstringfinal;
+}
+
+public static int getGeneralStatus(MessageContents message)
+{
+	int aux = 0;
+	//Ignicion
+	if (message.getInputs().getIgnition().compareTo("on") == 0) {
+		aux |= GeneralStatusType.GENERAL_STATUS_IGNITION_VALUE;
+		System.err.println("Ingnicion ON.");
+	}
+	if (Integer.parseInt(message.getEventCode()) == CalampEventCode.OffMainPower){
+		aux |= GeneralStatusType.GENERAL_STATUS_BATTERY_VALUE;
+	}
+	return aux;
 }
 
 public static String getScopeString (ArrayList <DataObject> datos) throws ParseException{
@@ -364,6 +379,9 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 			//System.err.println ("Utc segundos: " + utcTimestampSeconds
 			//		+ "(" + calampMessage.getTimeOfFix() + ")");
 			
+			//revisamos los inputstatus y los cargamos en el general status.
+			int generalStatus = getGeneralStatus(calampMessage);
+			
 			commonHeader = EventHeader.newBuilder()
 					.setDescription(description)
 					.setDirection(direction)
@@ -373,12 +391,13 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 					.setLongitude(longitude)
 					.setOdometer(odometer)
 					.setOutputStatus(outputStatus)
-					.setSource(0)
+					.setSource(8)
 					.setSpeed(speed)
 					.setTemplateId(templateId)
 					.setUnitId(unitId)
 					.setUtcTimestampSeconds(utcTimestampSeconds)
-					.setSource(8)
+					//estado de las igniciones y alimentacion se carga aqui.
+					.setGeneralStatus(generalStatus)
 					.build ()
 					;
 					
@@ -395,7 +414,7 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 			//Debug
 			if (templateId != 0)
 				System.err.println ("Scope event " + templateId + " (Calamp event " + 
-				calampEventCode + ")");
+				calampEventCode + ": " + description + ")");
 			
 			switch (templateId){
 				
@@ -501,13 +520,12 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 			}
 			
 			if (templateId != ScopeEventCode.UnknownEvent)
-				//if (response.messagesCount () < 1)
 				response.addMessage (message);
 			
 		}
 		
 		String ans = gson.toJson(response);
-		System.err.println (ans);
+		System.out.println (ans);
 		
 		return ans;
 

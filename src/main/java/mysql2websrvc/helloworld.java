@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -22,9 +23,13 @@ import java.io.IOException;
 
 
 
+
+
 import ScopeProtoJava.EventHeaderProto.EventHeader;
 import ScopeProtoJava.PeriodicPositionProto;
 import ScopeProtoJava.PeriodicPositionProto.PeriodicPosition;
+
+
 
 
 
@@ -42,23 +47,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 
-
-
-
-
-
-
-
-//http
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
-
-
 public class helloworld {
-	public static void main (String [] args)
+	
+	static BufferedWriter writer;
+	static Gson gson = new Gson ();
+	
+	public static void main (String [] args) throws IOException
 	{
+		writer = new BufferedWriter (new FileWriter ("eventos.txt", true));
+		Scanner sc = new Scanner (System.in);
+		
 		ArrayList<DataObject> jsonin;
 				
 		/*
@@ -68,67 +66,61 @@ public class helloworld {
 		*/
 		
 		//*
+		
+		//choice = choose.findInLine("end");		
+		
 		try{
-			System.out.println("Iniciando extraccion de datos");
-			System.out.println("-----------------------------");
-			
-			System.out.println("UTC"  + System.currentTimeMillis()/1000);
-			
-			//Conexion a MySql
-			ReadJsonfromMysql.open();
-			jsonin = ReadJsonfromMysql.ConectToDB();
-			System.out.println("SQL Ok.");
-			
-			//Conexion a servicio HTTP restful
-			if (jsonin != null){
-				String jsonString;
 				
-				jsonString = Calamp2Scope.toScopeString (jsonin);
-				//jsonString = Calamp2Scope.MigrateBackup (jsonin);
-				//jsonString = Calamp2Scope.getScopeString(jsonin);
+				System.out.println("Iniciando extraccion de datos");
+				System.out.println("-----------------------------");
 				
-				httprestjava.HttpsClientC(jsonString);
-				//ReadJsonfromMysql.deleteData();
-			}
-			
-			ReadJsonfromMysql.close();
-			System.out.println("FIN\n");
-			
+				while (true){
+					
+					//Conexion a MySql
+					ReadJsonfromMysql.open();
+					System.out.println("SQL Ok.");
+				
+					jsonin = ReadJsonfromMysql.ConectToDB();
+					//Conexion a servicio HTTP restful
+					if (jsonin != null){
+						String jsonString;
+					
+						jsonString = Calamp2Scope.toScopeString (jsonin);
+						guardar (gson.toJson (jsonin), jsonString);
+						httprestjava.HttpsClientC(jsonString);
+						ReadJsonfromMysql.deleteData();
+					}
+					
+					ReadJsonfromMysql.close();
+					
+					/*
+					if (sc.hasNext ()){
+						if (sc.next ().compareToIgnoreCase("fin") == 0)
+							break;
+					}
+					//*/
+					
+				}
+					
+				
+				//System.out.println("FIN\n");
+				//Thread.sleep(5000);
 		}
 		catch (Exception e)
 		{
 			e.getStackTrace();
 			e.printStackTrace();
 		}
+		
+		if (writer != null) writer.close ();
+		
 		//*/
 	}
 	
-	public static void testConnect() {
-		String dbUrl = "jdbc:mysql://209.208.110.219/f_workstation";
-		String dbClass = "com.mysql.jdbc.Driver";
-		String querytest = "select fws_eve_event from fws_event";
-		String query2 = "Select * from fws_event";
-		String username = "root";
-		String password = "Base.2015";
-		try {
-			Class.forName(dbClass);
-			Connection connection = DriverManager.getConnection(dbUrl, username, password);
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(query2);
-			
-			while (resultSet.next()) {
-				String tableName = resultSet.getString(1);
-				System.out.println("Table name : " + tableName);
-				String dato = resultSet.getString("fws_eve_event");
-				System.out.println("Data : " + dato);
-			}
-			
-			connection.close();
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}		
+	public static void guardar (final String calampString, final String scopeString) throws IOException{
+		writer.write("Calamp events:\n\n");
+		writer.write(calampString + "\n\n\n\n\n");
+		writer.write("Scope events:\n\n");
+		writer.write(scopeString + "\n\n\n\n\n");
+	}
 }
