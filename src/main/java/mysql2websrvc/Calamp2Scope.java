@@ -1,8 +1,12 @@
 package mysql2websrvc;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -20,16 +24,23 @@ import ScopeProtoJava.MainPowerHighProto.MainPowerHigh;
 import ScopeProtoJava.MainPowerLowProto.MainPowerLow;
 import ScopeProtoJava.PeriodicPositionProto.PeriodicPosition;
 import ScopeProtoJava.StartOfExcessiveIdleProto.StartOfExcessiveIdle;
+import ScopeProtoJava.TripShutdownProto.TripShutdown;
+import ScopeProtoJava.TripStartupProto.TripStartup;
+import ScopeProtoJava.TripSummaryProto.TripSummary;
 
 import com.google.gson.Gson;
 
 public class Calamp2Scope {
+	
+	static BufferedWriter bw;
+	
 public static String Migrate(ArrayList <DataObject> datos) throws ParseException {
 	String jsonstringfinal = "";
 	MessageContents calampmsg;
 	ScopeEventHeader headertmp = new ScopeEventHeader();
 	Gson gson = new Gson ();
 	int codigoevento, eventocompleto;
+	
 	
 	ResponsePrototype response = new ResponsePrototype ();
 
@@ -340,8 +351,17 @@ public static String getScopeString (ArrayList <DataObject> datos) throws ParseE
 }
 
 
-public static String toScopeString (ArrayList <DataObject> datos) throws ParseException{
+public static String toScopeString (ArrayList <DataObject> datos) throws ParseException, IOException{
 		
+		String DATE_FORMAT = "yyyyMMdd";
+		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+		Calendar c1 = Calendar.getInstance(); // today
+		final String filename = "Headers_" + sdf.format(c1.getTime()) + ".txt";
+		
+		bw = new BufferedWriter (new FileWriter (filename, true));
+		
+		//Consideraciones para crear los tiempos.
+		long timeAdjust = 4 * 3600;
 		Gson gson = new Gson ();
 		final SimpleDateFormat sdfu  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 		final Date utc1970 = sdfu.parse("1970-01-01 00:00:00");
@@ -374,13 +394,17 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 			int outputStatus = 0;
 			int speed = (int) speedDouble;
 			int templateId = idAndDescription.getTemplateId ();
-			long utcTimestampSeconds = (udate.getTime () - utc1970.getTime()) / 1000;
-			
-			//System.err.println ("Utc segundos: " + utcTimestampSeconds
-			//		+ "(" + calampMessage.getTimeOfFix() + ")");
-			
-			//revisamos los inputstatus y los cargamos en el general status.
+			long utcTimestampSeconds = (udate.getTime () - utc1970.getTime()) / 1000 + timeAdjust;
 			int generalStatus = getGeneralStatus(calampMessage);
+			String 	[] accumulatorsString = calampMessage.getAccumulators();
+			int accumulators [] = new int [accumulatorsString.length];
+			
+			for (int i = 0; i < accumulators.length; ++i)
+				accumulators [i] = Integer.parseInt(accumulatorsString [i]);
+			
+			int tripDistance;
+			int tripDuration;
+			int tripIdentifier;
 			
 			commonHeader = EventHeader.newBuilder()
 					.setDescription(description)
@@ -396,7 +420,6 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 					.setTemplateId(templateId)
 					.setUnitId(unitId)
 					.setUtcTimestampSeconds(utcTimestampSeconds)
-					//estado de las igniciones y alimentacion se carga aqui.
 					.setGeneralStatus(generalStatus)
 					.build ()
 					;
@@ -404,7 +427,7 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 			message.setTemplateId(templateId);
 			message.setUnitId (unitId);
 			
-			byte [] bytes;
+			byte [] bytes = null;
 			String encodedBody;
 			
 			//Rechazar eventos con fecha inválida
@@ -412,7 +435,7 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 				templateId = ScopeEventCode.UnknownEvent;
 			
 			//Debug
-			if (templateId != 0)
+			if (templateId != ScopeEventCode.UnknownEvent)
 				System.err.println ("Scope event " + templateId + " (Calamp event " + 
 				calampEventCode + ": " + description + ")");
 			
@@ -425,8 +448,6 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 						.build ();
 					
 					bytes = periodicPosition.toByteArray();
-					encodedBody = Base64.encodeBase64String(bytes);
-					message.setEncodedBody (encodedBody);
 					
 					break;
 					
@@ -437,8 +458,6 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 						.build ();
 					
 					bytes = batteryLow.toByteArray();
-					encodedBody = Base64.encodeBase64String(bytes);
-					message.setEncodedBody (encodedBody);
 					
 					break;				
 						
@@ -449,8 +468,6 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 						.build ();
 					
 					bytes = mainPowerHigh.toByteArray();
-					encodedBody = Base64.encodeBase64String(bytes);
-					message.setEncodedBody (encodedBody);
 					
 					break;
 					
@@ -461,9 +478,7 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 						.build ();
 					
 					bytes = mainPowerLow.toByteArray();
-					encodedBody = Base64.encodeBase64String(bytes);
-					message.setEncodedBody (encodedBody);
-					
+
 					break;
 					
 				case ScopeEventCode.ExcessiveIdle:
@@ -473,8 +488,6 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 						.build ();
 					
 					bytes = excessiveIdle.toByteArray();
-					encodedBody = Base64.encodeBase64String(bytes);
-					message.setEncodedBody (encodedBody);
 					
 					break;
 					
@@ -485,8 +498,6 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 						.build ();
 					
 					bytes = startOfExcessiveIdle.toByteArray();
-					encodedBody = Base64.encodeBase64String(bytes);
-					message.setEncodedBody (encodedBody);
 					
 					break;
 					
@@ -496,9 +507,7 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 						.setHeader(commonHeader)
 						.build ();
 					
-					bytes = engineStart.toByteArray();
-					encodedBody = Base64.encodeBase64String(bytes);
-					message.setEncodedBody (encodedBody);
+					bytes = engineStart.toByteArray();;
 					
 					break;
 					
@@ -509,25 +518,71 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 						.build ();
 					
 					bytes = engineStop.toByteArray();
-					encodedBody = Base64.encodeBase64String(bytes);
-					message.setEncodedBody (encodedBody);
 					
 					break;
 					
+				case ScopeEventCode.TripStartup:
+					tripDistance = accumulators [0];
+					tripDuration = accumulators [1];
+					tripIdentifier = accumulators [2];
+					
+					System.err.println ("Trip distance: " + tripDistance);
+					System.err.println ("Trip duration: " + tripDuration);
+					System.err.println ("Trip id: " + tripIdentifier);
+					
+					TripStartup tripStartup = TripStartup
+						.newBuilder()
+						.setHeader(commonHeader)
+						.setTripId(tripIdentifier)
+						.build ();
+					
+					bytes = tripStartup.toByteArray();
+					
+					break;
+					
+				case ScopeEventCode.TripShutdown:
+					tripDistance = accumulators [0];
+					tripDuration = accumulators [1];
+					tripIdentifier = accumulators [2];
+					
+					System.err.println ("Trip distance: " + tripDistance);
+					System.err.println ("Trip duration: " + tripDuration);
+					System.err.println ("Trip id: " + tripIdentifier);
+					
+					TripShutdown tripShutdown = TripShutdown
+						.newBuilder()
+						.setHeader(commonHeader)
+						.setTripDistanceMeters(tripDistance)
+						.setTripDurationSeconds(tripDuration)
+						.setTripId(tripIdentifier)
+						.build();
+					
+					bytes = tripShutdown.toByteArray();
 					
 				default:
 					System.err.println ("Unknown Calamp event " + calampEventCode);
 			}
 			
-			if (templateId != ScopeEventCode.UnknownEvent)
+			if (templateId != ScopeEventCode.UnknownEvent){
+				encodedBody = Base64.encodeBase64String(bytes);
+				message.setEncodedBody (encodedBody);
 				response.addMessage (message);
+				saveHeader (gson.toJson(commonHeader));
+			}		
 			
 		}
 		
 		String ans = gson.toJson(response);
 		System.out.println (ans);
 		
+		if (bw != null) bw.close ();
+		
 		return ans;
 
 }
+		
+		public static void saveHeader (final String hdr) throws IOException{
+			bw.write(hdr + "\n\n");
+		}
+
 }

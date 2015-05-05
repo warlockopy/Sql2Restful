@@ -33,6 +33,17 @@ public class ScopeTemplateIdAndDescription {
 				description = "ExcessiveIdle";
 				break;
 				
+			case CalampEventCode.BeginingOfDrive:
+				templateId = ScopeEventCode.TripStartup;
+				description = "TripStartup";
+				break;
+				
+			case CalampEventCode.EndOfDrive:
+				templateId = ScopeEventCode.TripShutdown;
+				description = "TripShutdown";
+				break;
+			
+				
 			case CalampEventCode.OnMainPower:
 				templateId = ScopeEventCode.MainPowerHigh;
 				description = "MainPowerHigh";
@@ -47,8 +58,7 @@ public class ScopeTemplateIdAndDescription {
 				templateId = ScopeEventCode.StartOfExcessiveIdle;
 				description = "StartOfExcessiveIdle";
 				break;
-				
-				
+					
 			default:
 				templateId = ScopeEventCode.UnknownEvent;
 				description = "UnknownEvent";

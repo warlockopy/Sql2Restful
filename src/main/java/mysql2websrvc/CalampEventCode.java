@@ -27,6 +27,8 @@ public class CalampEventCode {
 	public static final int Input2Transition = 52;
 	public static final int WakefromSleep = 20;
 	public static final int FirstMotion = 21;
+	public static final int BeginingOfDrive = 31;
+	public static final int EndOfDrive = 32;
 	public static final int JammingDetected = 60;
 	public static final int Input4Low = 70;
 	public static final int Input4High = 71;

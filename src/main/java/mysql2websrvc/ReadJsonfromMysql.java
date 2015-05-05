@@ -36,7 +36,14 @@ public class ReadJsonfromMysql {
 	}
 	
 	public static void deleteData (){
-		for (BigInteger eventId : eventIdList){
+		try {
+			statement.execute("DELETE FROM fws_event WHERE 1=1 ORDER BY fws_eve_id LIMIT 30");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		/*for (BigInteger eventId : eventIdList){
 			String deleteTableSQL = "DELETE FROM fws_event WHERE fws_eve_id = " + eventId;
 			
 			try {
@@ -45,7 +52,7 @@ public class ReadJsonfromMysql {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}
 	
 	public static ArrayList <BigInteger> getEventIdList (){
@@ -62,7 +69,7 @@ public class ReadJsonfromMysql {
 	}
 	
 	public static ArrayList<DataObject> ConectToDB(){
-		String query = "Select * from fws_event";
+		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT 30";
 		try {
 			//Se conecta a la base de datos
 			//Class.forName(dbClass);
