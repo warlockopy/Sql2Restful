@@ -13,10 +13,9 @@ public class Process extends Thread{
 		while (true){
 
 			jsonin = ReadJsonfromMysql.ConectToDB();
-
-			if (jsonin.size() > 0){
+			/*Si encuentra datos los procesa*/
+			if (jsonin.size() > 0){  
 				String jsonString;
-				
 				try {
 					jsonString = Calamp2Scope.toScopeString (jsonin);
 					httpResult = httprestjava.HttpsClientC(jsonString);
@@ -27,13 +26,12 @@ public class Process extends Thread{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}	
-				
-				if (httpResult == 200) {
+				/*Si son validos, borra los datos procesados.*/
+				if (httpResult == 200) { 
 					ReadJsonfromMysql.deleteData();
 					System.out.println("Proceso de borrado MySql...");
 				}
 				
-				}
 			}
 			else {
 				System.out.println("0 Mensajes.");
