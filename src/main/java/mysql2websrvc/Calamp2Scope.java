@@ -421,8 +421,7 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 					.setUnitId(unitId)
 					.setUtcTimestampSeconds(utcTimestampSeconds)
 					.setGeneralStatus(generalStatus)
-					.build ()
-					;
+					.build ();
 					
 			message.setTemplateId(templateId);
 			message.setUnitId (unitId);

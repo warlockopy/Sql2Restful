@@ -8,6 +8,7 @@ public class Process extends Thread{
 	@Override
 	public void run (){
 		ArrayList <DataObject> jsonin;
+		int httpResult = 0;
 		
 		while (true){
 
@@ -18,7 +19,7 @@ public class Process extends Thread{
 				
 				try {
 					jsonString = Calamp2Scope.toScopeString (jsonin);
-					httprestjava.HttpsClientC(jsonString);
+					httpResult = httprestjava.HttpsClientC(jsonString);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
@@ -27,7 +28,12 @@ public class Process extends Thread{
 					e.printStackTrace();
 				}	
 				
-				ReadJsonfromMysql.deleteData();
+				if (httpResult == 200) {
+					ReadJsonfromMysql.deleteData();
+					System.out.println("Proceso de borrado MySql...");
+				}
+				
+				}
 			}
 			else {
 				System.out.println("0 Mensajes.");

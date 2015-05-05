@@ -34,7 +34,7 @@ public class httprestjava {
 	public static String username = "PYLS", password = "Dn1f8C5XeJj42AzG";
 	
 	
-	public static void HttpsClientC(String datoJson) throws Exception {
+	public static int HttpsClientC(String datoJson) throws Exception {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpPost post = new HttpPost(urlscope);
 		String mydatetime, auheader;
@@ -53,13 +53,15 @@ public class httprestjava {
 		StringEntity input = new StringEntity(datoJson);
 		input.setContentType("application/json");
 		post.setEntity(input);
+		int httperr;
 		
 		
 		CloseableHttpResponse response = httpclient.execute(post); 
 		try {
 			System.out.println("Respuesta del servidor");
 			System.out.println(response.getProtocolVersion());
-			System.out.println(response.getStatusLine().getStatusCode());
+			httperr = response.getStatusLine().getStatusCode();
+			System.out.println(httperr);
 			System.out.println(response.getStatusLine().getReasonPhrase());
 			
 			BufferedReader br = new BufferedReader(
@@ -74,6 +76,7 @@ public class httprestjava {
 		} finally {
 			response.close();
 		}
+		return httperr;
 	}
 	
 	public static String makesignature(String apikey, String stringtosign) {
