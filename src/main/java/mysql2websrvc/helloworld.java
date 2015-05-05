@@ -56,7 +56,8 @@ public class helloworld {
 			process.start();
 			System.in.read();
 			process.interrupt();
-			ReadJsonfromMysql.close();		
+			ReadJsonfromMysql.close();
+			System.exit(0);
 		}
 		catch (Exception e)
 		{
