@@ -27,7 +27,7 @@ public class Process extends Thread{
 					e.printStackTrace();
 				}	
 				/*Si son validos, borra los datos procesados.*/
-				if (httpResult == 200) { 
+				if (httpResult == 200 || httpResult == 403) { 
 					ReadJsonfromMysql.deleteData();
 					System.out.println("Proceso de borrado MySql...");
 				}
