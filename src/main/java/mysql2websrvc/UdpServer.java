@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-public class UdpServer {
+public class UdpServer extends Thread {
 	
 	static final int bufferSize = 65536;
 	
