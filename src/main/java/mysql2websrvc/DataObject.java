@@ -41,6 +41,7 @@ public class DataObject
     @Override
     public String toString()
     {
-        return "ClassPojo [messageContents = "+messageContents+", messageHeader = "+messageHeader+", optionsHeader = "+optionsHeader+"]";
+        return "ClassPojo [messageContents = "+ messageContents + ", messageHeader = " + 
+        		messageHeader + ", optionsHeader = " + optionsHeader + "]";
     }
 }

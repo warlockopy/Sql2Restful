@@ -30,10 +30,14 @@ import ScopeProtoJava.TripSummaryProto.TripSummary;
 
 import com.google.gson.Gson;
 
+import feedback.Success;
+
 public class Calamp2Scope {
 	
 	static BufferedWriter bw;
+
 	
+@Deprecated
 public static String Migrate(ArrayList <DataObject> datos) throws ParseException {
 	String jsonstringfinal = "";
 	MessageContents calampmsg;
@@ -122,6 +126,8 @@ public static String Migrate(ArrayList <DataObject> datos) throws ParseException
 	
 	return jsonstringfinal;
 }
+
+@Deprecated
 public static String MigrateBackup(ArrayList <DataObject> datos) throws ParseException {
 	String jsonstringfinal = "";
 	ScopePeriodicPosition perpostmp = new ScopePeriodicPosition ();
@@ -205,6 +211,7 @@ public static int getGeneralStatus(MessageContents message)
 	return aux;
 }
 
+@Deprecated
 public static String getScopeString (ArrayList <DataObject> datos) throws ParseException{
 	ScopeEventHeader commonHeader = new ScopeEventHeader ();
 	Gson gson = new Gson ();
@@ -351,7 +358,7 @@ public static String getScopeString (ArrayList <DataObject> datos) throws ParseE
 }
 
 
-public static String toScopeString (ArrayList <DataObject> datos) throws ParseException, IOException{
+public static Success toScopeString (ArrayList <DataObject> datos) throws ParseException, IOException{
 		
 		String DATE_FORMAT = "yyyyMMdd";
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
@@ -367,11 +374,14 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 		final Date utc1970 = sdfu.parse("1970-01-01 00:00:00");
 		
 		ResponsePrototype response = new ResponsePrototype ();
+		ArrayList <String> successList = new ArrayList ();
+		ArrayList <String> scopeMessageList = new ArrayList ();
 		int calampEventCode;
 		EventHeader commonHeader;
 		
 		for (DataObject arrayElement : datos){
 			
+			String successCode = "unknown report";
 			MessagesPostPrototype message = new MessagesPostPrototype ();
 			MessageContents calampMessage = arrayElement.getMessageContents();
 			calampEventCode = Integer.parseInt(calampMessage.getEventCode());
@@ -430,8 +440,10 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 			String encodedBody;
 			
 			//Rechazar eventos con fecha inválida
-			if (calampMessage.getFixStatus ().getInvalidFix ().compareTo("true") == 0)
+			if (calampMessage.getFixStatus ().getInvalidFix ().compareTo("true") == 0){
 				templateId = ScopeEventCode.UnknownEvent;
+				successCode = "invalid fix";
+			}
 			
 			//Debug
 			if (templateId != ScopeEventCode.UnknownEvent)
@@ -567,21 +579,25 @@ public static String toScopeString (ArrayList <DataObject> datos) throws ParseEx
 				message.setEncodedBody (encodedBody);
 				response.addMessage (message);
 				saveHeader (gson.toJson(commonHeader));
-			}		
+				successCode = "sent";
+			}
+			
+			successList.add(successCode);
+			scopeMessageList.add(gson.toJson(message));
 			
 		}
 		
-		String ans = gson.toJson(response);
-		System.out.println (ans);
+		String scopeString = gson.toJson(response);
+		System.out.println (scopeString);
 		
 		if (bw != null) bw.close ();
 		
-		return ans;
+		return new Success (scopeString, scopeMessageList, successList);
 
-}
+	}
 		
-		public static void saveHeader (final String hdr) throws IOException{
-			bw.write(hdr + "\n\n");
-		}
+	public static void saveHeader (final String hdr) throws IOException{
+		bw.write(hdr + "\n\n");
+	}
 
 }

@@ -27,6 +27,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import feedback.HttpOutput;
+
 public class httprestjava {
 	public static String urlscope = "https://us.scopemp.net/Scope.MProfiler.ThirdPartyGateway.Api/api/v1/messages";
 	public static String ScopeHost = "us.scopemp.net";
@@ -34,10 +36,12 @@ public class httprestjava {
 	public static String username = "PYLS", password = "Dn1f8C5XeJj42AzG";
 	
 	
-	public static int HttpsClientC(String datoJson) throws Exception {
+	public static HttpOutput httpsClientC(String datoJson) throws Exception {
+		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpPost post = new HttpPost(urlscope);
 		String mydatetime, auheader;
+		String serverOutputString = "";
 		
 		mydatetime = MD5.getCurrentTime();
 		post.setHeader("Accept", "application/json");
@@ -56,7 +60,8 @@ public class httprestjava {
 		int httperr;
 		
 		
-		CloseableHttpResponse response = httpclient.execute(post); 
+		CloseableHttpResponse response = httpclient.execute(post);
+		
 		try {
 			System.out.println("Respuesta del servidor");
 			System.out.println(response.getProtocolVersion());
@@ -70,13 +75,17 @@ public class httprestjava {
 				String output;
 				
 				System.out.println("Output from Server .... \n");
-				while ((output = br.readLine()) != null)
+				
+				while ((output = br.readLine()) != null){
 					System.out.println(output);
+					serverOutputString += output;
+				}
 			
 		} finally {
 			response.close();
 		}
-		return httperr;
+		
+		return new HttpOutput (httperr, serverOutputString);
 	}
 	
 	public static String makesignature(String apikey, String stringtosign) {
