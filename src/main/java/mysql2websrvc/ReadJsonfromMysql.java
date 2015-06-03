@@ -68,7 +68,7 @@ public class ReadJsonfromMysql {
 		}
 	}
 	
-	public static ArrayList<DataObject> ConectToDB(){
+	public static ArrayList<DataObject> connectToDB(){
 		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT 30";
 		try {
 			//Se conecta a la base de datos

@@ -2,8 +2,6 @@ package mysql2websrvc;
 
 import java.io.*;
 import java.util.Scanner;
-
-// Importaciones para el parser json
 import com.google.gson.Gson;
 
 
@@ -36,8 +34,7 @@ public class helloworld {
 			e.getStackTrace();
 			e.printStackTrace();
 		}
-		
-		
+			
 	}
 	
 	//*/

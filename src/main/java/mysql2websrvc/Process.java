@@ -25,7 +25,7 @@ public class Process extends Thread{
 		
 		while (true){
 
-			calampData = ReadJsonfromMysql.ConectToDB();
+			calampData = ReadJsonfromMysql.connectToDB();
 			
 			if (calampData.size() > 0){  
 				
@@ -38,11 +38,6 @@ public class Process extends Thread{
 					httpResult = httpOutput.getCode ();
 					String serverOutputString = httpOutput.getOutput ();
 					ServerResponse serverResponse = gson.fromJson(serverOutputString, ServerResponse.class);
-					
-					//Ternas Calamp-Scope-Output
-					//success contiene códigos de éxito
-					//Si el código es "sent" obtener output de result.getOutput ()
-					//*Agregar atributo a Success para obtener los mensajes por separado
 					saveEvents (calampData, success, serverResponse);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -51,7 +46,7 @@ public class Process extends Thread{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}	
-				/*Si son validos, borra los datos procesados.*/
+				
 				if (httpResult == 200 || httpResult == 404) { 
 					ReadJsonfromMysql.deleteData();
 					System.out.println("Proceso de borrado MySql...");
@@ -102,7 +97,7 @@ public class Process extends Thread{
 	private static void saveString (final String string){
 		
 		DateFormat format = new SimpleDateFormat ("yyyy_MM_dd");
-		String dateString = format.format(new Date ());
+		String dateString = format.format (new Date ());
 		String fileName = "EVENTS_" + dateString + ".txt";
 		
 		try {
@@ -113,6 +108,7 @@ public class Process extends Thread{
 			writer.newLine();
 			
 			writer.close ();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

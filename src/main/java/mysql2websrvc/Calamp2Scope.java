@@ -36,329 +36,24 @@ public class Calamp2Scope {
 	
 	static BufferedWriter bw;
 
-	
-@Deprecated
-public static String Migrate(ArrayList <DataObject> datos) throws ParseException {
-	String jsonstringfinal = "";
-	MessageContents calampmsg;
-	ScopeEventHeader headertmp = new ScopeEventHeader();
-	Gson gson = new Gson ();
-	int codigoevento, eventocompleto;
-	
-	
-	ResponsePrototype response = new ResponsePrototype ();
 
-	for (int i=0; i < datos.size(); i++){
-		MessagesPostPrototype msgtmp = new MessagesPostPrototype ();
-		calampmsg = datos.get(i).getMessageContents();
-		codigoevento = Integer.parseInt(calampmsg.getEventCode());
-		eventocompleto = 0;
-						
-		SimpleDateFormat sdfu  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-	    Date udate = sdfu.parse(calampmsg.getTimeOfFix());
-	    
-	    long timeInMillisSinceEpoch123 = udate.getTime(); 
-	    long durationinSeconds2 = timeInMillisSinceEpoch123 / 1000;
-		headertmp.UtcTimestampSeconds = durationinSeconds2;
-		
-		headertmp.Latitude = Double.parseDouble(calampmsg.getLatitude());
-		headertmp.Longitude = Double.parseDouble(calampmsg.getLongitude());
-		
-		StringTokenizer st = new StringTokenizer (calampmsg.getSpeed ());
-		headertmp.Speed = (int) Double.parseDouble (st.nextToken ());
-		
-		headertmp.Direction = Integer.parseInt(calampmsg.getHeading());
-		headertmp.Odometer = 0;
-		
-		int bit0 = calampmsg.getInputs().getIgnition().compareTo("on") == 0 ? 1 : 0;
-		int bit1 = calampmsg.getInputs().getInput1().compareTo("on") == 0 ? 1 : 0;
-		int bit2 = calampmsg.getInputs().getInput2().compareTo("on") == 0 ? 1 : 0;
-		int bit3 = calampmsg.getInputs().getInput3().compareTo("on") == 0 ? 1 : 0;
-		int bit4 = calampmsg.getInputs().getInput4().compareTo("on") == 0 ? 1 : 0;
-		int bit5 = calampmsg.getInputs().getInput5().compareTo("on") == 0 ? 1 : 0;
-		int bit6 = calampmsg.getInputs().getInput6().compareTo("on") == 0 ? 1 : 0;
-		int bit7 = calampmsg.getInputs().getInput7().compareTo("on") == 0 ? 1 : 0;
-		
-		headertmp.InputStatus = (bit7 << 7) + (bit6 << 6) + (bit5 << 5) + (bit4 << 4)
-				        + (bit3 << 3) + (bit2 << 2) + (bit1 << 1) + bit0;
-		
-		
-		//Forzar codigo de evento
-		codigoevento = CalampEventCode.NonTripPosition;
-		
-		//headertmp.OutputStatus = 
-		switch (codigoevento){
-			case CalampEventCode.NonTripPosition:
-				
-				
-				String unitid = datos.get(i).getOptionsHeader().getMobileId(); 
-				headertmp.UnitId = unitid;
-				msgtmp.setUnitId(unitid);
-				headertmp.Source = 0;
-				headertmp.TemplateId = 6;
-				msgtmp.setTemplateId(6);
-				headertmp.Description = "NonTripPosition";
-				//perpostmp.header.copyHeader (headertmp);
-				//ScopePeriodicPosition perpostmp = new ScopePeriodicPosition ();
-				//perpostmp.setHeader(headertmp);
-				//perpostmp.header.UnitId = headertmp.UnitId;
-				
-				
-				ScopeNonTripPosition ntp = new ScopeNonTripPosition ();
-				ntp.setHeader(headertmp);
-				//msgtmp.setBody(perpostmp);
-				msgtmp.setBody (ntp);
-				eventocompleto = 1;
-				break;
-			default:
-				System.out.println ("-----------------------------");
-				System.out.println ("Evento no encontrado : " + codigoevento);
-				System.out.println ("-----------------------------");
-				break;			
+	public static int getGeneralStatus(MessageContents message)
+	{
+		int ans = 0;
+		//Ignicion
+		if (message.getInputs().getIgnition().compareTo("on") == 0) {
+			ans |= GeneralStatusType.GENERAL_STATUS_IGNITION_VALUE;
+			System.err.println("Ingnicion ON.");
 		}
-		
-		
-		if (eventocompleto == 1) response.addMessage(msgtmp);
-		
-	}
-	
-	jsonstringfinal = gson.toJson (response);
-	
-	return jsonstringfinal;
-}
-
-@Deprecated
-public static String MigrateBackup(ArrayList <DataObject> datos) throws ParseException {
-	String jsonstringfinal = "";
-	ScopePeriodicPosition perpostmp = new ScopePeriodicPosition ();
-	MessageContents calampmsg;
-	ScopeEventHeader headertmp;
-	Gson gson = new Gson ();
-	int codigoevento;
-	
-	ResponsePrototype response = new ResponsePrototype ();
-
-	for (int i=0; i < datos.size(); i++){
-		MessagesPostPrototype msgtmp = new MessagesPostPrototype ();
-		calampmsg = datos.get(i).getMessageContents();
-		codigoevento = Integer.parseInt(calampmsg.getEventCode());
-		
-		String unitid = datos.get(i).getOptionsHeader().getMobileId(); 
-		perpostmp.header.UnitId = unitid;
-		msgtmp.setUnitId(unitid);
-		msgtmp.setTemplateId(1);
-		perpostmp.header.Description = "PeriodicPosition";
-		
-		SimpleDateFormat sdfu  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-	    Date udate = sdfu.parse(calampmsg.getTimeOfFix());
-	    
-	    long timeInMillisSinceEpoch123 = udate.getTime(); 
-	    long durationinSeconds2 = timeInMillisSinceEpoch123 / 1000;
-		perpostmp.header.UtcTimestampSeconds = durationinSeconds2;
-		
-		perpostmp.header.Latitude = Double.parseDouble(calampmsg.getLatitude());
-		perpostmp.header.Longitude = Double.parseDouble(calampmsg.getLongitude());
-		
-		StringTokenizer st = new StringTokenizer (calampmsg.getSpeed ());
-		perpostmp.header.Speed = (int) Double.parseDouble (st.nextToken ());
-		
-		perpostmp.header.Direction = Integer.parseInt(calampmsg.getHeading());
-		perpostmp.header.Odometer = 0;
-		
-		int bit0 = calampmsg.getInputs().getIgnition().compareTo("on") == 0 ? 1 : 0;
-		int bit1 = calampmsg.getInputs().getInput1().compareTo("on") == 0 ? 1 : 0;
-		int bit2 = calampmsg.getInputs().getInput2().compareTo("on") == 0 ? 1 : 0;
-		int bit3 = calampmsg.getInputs().getInput3().compareTo("on") == 0 ? 1 : 0;
-		int bit4 = calampmsg.getInputs().getInput4().compareTo("on") == 0 ? 1 : 0;
-		int bit5 = calampmsg.getInputs().getInput5().compareTo("on") == 0 ? 1 : 0;
-		int bit6 = calampmsg.getInputs().getInput6().compareTo("on") == 0 ? 1 : 0;
-		int bit7 = calampmsg.getInputs().getInput7().compareTo("on") == 0 ? 1 : 0;
-		
-		perpostmp.header.InputStatus = (bit7 << 7) + (bit6 << 6) + (bit5 << 5) + (bit4 << 4)
-				        + (bit3 << 3) + (bit2 << 2) + (bit1 << 1) + bit0;
-		
-		//perpostmp.header.OutputStatus = 
-		perpostmp.header.Source = 0;
-		perpostmp.header.TemplateId = 1;
-		
-		
-		System.err.println ("Body: " + gson.toJson(perpostmp));
-		
-		msgtmp.setBody(perpostmp);
-		
-		response.addMessage(msgtmp);
-		
-	}
-	
-	jsonstringfinal = gson.toJson (response);
-	
-	System.err.println (jsonstringfinal);
-	
-	return jsonstringfinal;
-}
-
-public static int getGeneralStatus(MessageContents message)
-{
-	int aux = 0;
-	//Ignicion
-	if (message.getInputs().getIgnition().compareTo("on") == 0) {
-		aux |= GeneralStatusType.GENERAL_STATUS_IGNITION_VALUE;
-		System.err.println("Ingnicion ON.");
-	}
-	if (Integer.parseInt(message.getEventCode()) == CalampEventCode.OffMainPower){
-		aux |= GeneralStatusType.GENERAL_STATUS_BATTERY_VALUE;
-	}
-	return aux;
-}
-
-@Deprecated
-public static String getScopeString (ArrayList <DataObject> datos) throws ParseException{
-	ScopeEventHeader commonHeader = new ScopeEventHeader ();
-	Gson gson = new Gson ();
-	ResponsePrototype response = new ResponsePrototype ();
-	int calampEventCode;
-	
-	for (DataObject arrayElement : datos){
-		
-		MessagesPostPrototype message = new MessagesPostPrototype ();
-		MessageContents calampMessage = arrayElement.getMessageContents();
-		calampEventCode = Integer.parseInt(calampMessage.getEventCode());
-		
-		//Construir el header (excepto los atributos Description y templateId que dependen del calampEventCode)
-		String unitId = arrayElement.getOptionsHeader().getMobileId();
-		commonHeader.UnitId = unitId;
-		message.setUnitId (unitId);
-		SimpleDateFormat sdfu  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-	    Date udate = sdfu.parse(calampMessage.getTimeOfFix());
-	    long timeInMillisSinceEpoch123 = udate.getTime(); 
-	    long durationinSeconds2 = timeInMillisSinceEpoch123 / 1000;
-		commonHeader.UtcTimestampSeconds = durationinSeconds2;
-		commonHeader.Latitude = Double.parseDouble(calampMessage.getLatitude());
-		commonHeader.Longitude = Double.parseDouble(calampMessage.getLongitude());
-		StringTokenizer st = new StringTokenizer (calampMessage.getSpeed ());
-		commonHeader.Speed = (int) Double.parseDouble (st.nextToken ());
-		commonHeader.Direction = Integer.parseInt(calampMessage.getHeading());
-		commonHeader.Odometer = 0;
-		commonHeader.InputStatus = calampMessage.getInputs().toInteger();
-		commonHeader.Source = 0;
-		
-		switch (calampEventCode){
-			
-			case CalampEventCode.PeriodicReport: //Scope PeriodicPosition (templateId 1)
-				ScopePeriodicPosition periodicPosition = new ScopePeriodicPosition ();
-				message.setTemplateId(1);
-				commonHeader.Description = "PeriodicPosition";
-				periodicPosition.setHeader (commonHeader);
-				//Parámetros adicionales del evento
-				periodicPosition.rpm = 0;
-				periodicPosition.trip_distance_meters = 0;
-				periodicPosition.trip_duration_seconds = 0;
-				
-				message.setBody (periodicPosition);
-				break;
-				
-			case CalampEventCode.IgnitionOn: 	//Scope EngineStart (templateId ?)
-				ScopeEngineStart engineStart = new ScopeEngineStart ();
-				message.setTemplateId(-1); // Corregir id
-				commonHeader.Description = "EngineStart";
-				engineStart.setHeader (commonHeader);
-				//Parámetros adicionales del evento
-				//Ninguno
-				
-				message.setBody (engineStart);
-				break;
-				
-			case CalampEventCode.IgnitionOff: 	//Scope EngineStop (templateId ?)
-				ScopeEngineStop engineStop = new ScopeEngineStop ();
-				message.setTemplateId(1); // Corregir id
-				commonHeader.Description = "EngineStop";
-				engineStop.setHeader (commonHeader);
-				//Parámetros adicionales del evento
-				//Ninguno
-			
-				message.setBody (engineStop);
-				break;
-			
-			case CalampEventCode.OnMainPower: 	//Scope MainPowerHigh (templateId 214)
-				ScopeMainPowerHigh mainPowerHigh = new ScopeMainPowerHigh ();
-				message.setTemplateId(214);
-				commonHeader.Description = "MainPowerHigh";
-				mainPowerHigh.setHeader (commonHeader);
-				//Parámetros adicionales del evento
-				//Ninguno? Verificar
-			
-				message.setBody (mainPowerHigh);
-				break;				
-			
-			case CalampEventCode.OffMainPower: 	//Scope MainPowerLow (templateId 215)
-				ScopeMainPowerLow mainPowerLow = new ScopeMainPowerLow ();
-				message.setTemplateId(215);
-				commonHeader.Description = "MainPowerLow";
-				mainPowerLow.setHeader (commonHeader);
-				//Parámetros adicionales del evento
-				mainPowerLow.duration_seconds = 0;
-				mainPowerLow.threshold_volts = 0.0f;
-				mainPowerLow.value_volts = 0.0f;
-			
-				message.setBody (mainPowerLow);
-				break;
-				
-			case CalampEventCode.BatteryLow:	//Scope BatteryLow (templateId 109)
-				ScopeBatteryLow batteryLow = new ScopeBatteryLow ();
-				message.setTemplateId(109);
-				commonHeader.Description = "BatteryLow";
-				batteryLow.setHeader (commonHeader);
-				//Parámetros adicionales del evento
-				batteryLow.temperature = 0;
-				batteryLow.voltage = 0;
-				batteryLow.battery_age = 0;
-				batteryLow.charge_level_percentage = 0;
-			
-				message.setBody (batteryLow);
-				break;
-				
-			case CalampEventCode.Idle: 			//Scope StartOfExcessiveIdle (templateId ?)
-				ScopeStartOfExcessiveIdle startOfExcesiveIdle = new ScopeStartOfExcessiveIdle ();
-				message.setTemplateId(1); // Corregir id
-				commonHeader.Description = "StartOfExcessiveIdle";
-				startOfExcesiveIdle.setHeader (commonHeader);
-				//Parámetros adicionales del evento
-				//Ninguno
-			
-				message.setBody (startOfExcesiveIdle);
-				break;
-				
-			case CalampEventCode.ExcessiveIdle: 			//Scope ExcessiveIdle (templateId ?)
-				ScopeExcessiveIdle excessiveIdle = new ScopeExcessiveIdle ();
-				message.setTemplateId(1); // Corregir id
-				commonHeader.Description = "ExcessiveIdle";
-				excessiveIdle.setHeader (commonHeader);
-				//Parámetros adicionales del evento
-				excessiveIdle.rpm = 0;
-				excessiveIdle.duration_seconds = 0;
-			
-				message.setBody (excessiveIdle);
-				break;	
-					
-				
-			default:
-				System.err.println ("Evento " + calampEventCode + " desconocido");
+		if (Integer.parseInt(message.getEventCode()) == CalampEventCode.OffMainPower){
+			ans |= GeneralStatusType.GENERAL_STATUS_BATTERY_VALUE;
 		}
-		
-		
-		
-		response.addMessage (message);
-		
+		return ans;
 	}
-	
-	String ans = gson.toJson(response);
-	System.err.println (ans);
-	
-	return ans;
-}
 
 
-public static Success toScopeString (ArrayList <DataObject> datos) throws ParseException, IOException{
+
+	public static Success toScopeString (ArrayList <DataObject> datos) throws ParseException, IOException{
 		
 		String DATE_FORMAT = "yyyyMMdd";
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
@@ -440,10 +135,11 @@ public static Success toScopeString (ArrayList <DataObject> datos) throws ParseE
 			String encodedBody;
 			
 			//Rechazar eventos con fecha inválida
+			/*
 			if (calampMessage.getFixStatus ().getInvalidFix ().compareTo("true") == 0){
 				templateId = ScopeEventCode.UnknownEvent;
 				successCode = "invalid fix";
-			}
+			}*/
 			
 			//Debug
 			if (templateId != ScopeEventCode.UnknownEvent)
