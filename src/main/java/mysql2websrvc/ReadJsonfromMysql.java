@@ -87,7 +87,7 @@ public class ReadJsonfromMysql {
 				String eveIdString = resultSet.getString ("fws_eve_id");
 				BigInteger eventId = new BigInteger (eveIdString);
 				eventIdList.add (eventId);
-				System.out.println("Data : " + dato);
+				//System.out.println("Data : " + dato);
 				mysqljsonobject.add(Json2Obj(dato));
 			}
 			
