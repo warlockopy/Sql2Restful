@@ -22,13 +22,14 @@ public class Process extends Thread{
 		ArrayList <DataObject> calampData;
 		int httpResult = 0;
 		Gson gson = new Gson ();
+		boolean zeromsg = true;
 		
 		while (true){
 
 			calampData = ReadJsonfromMysql.connectToDB();
 			
 			if (calampData.size() > 0){  
-				
+				zeromsg = false;
 				String scopeString;
 				
 				try {
@@ -54,7 +55,10 @@ public class Process extends Thread{
 				
 			}
 			else {
-				System.out.println("0 Mensajes.");
+				if (zeromsg) {
+					System.out.println("0 Mensajes.");
+					zeromsg = false;
+				}
 			}
 		}
 	}
