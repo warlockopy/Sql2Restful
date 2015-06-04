@@ -82,7 +82,7 @@ public class ReadJsonfromMysql {
 			
 			while (resultSet.next()) {				
 				String tableName = resultSet.getString(1);
-				System.out.println("Table name : " + tableName);
+				//System.out.println("Table name : " + tableName);
 				String dato = resultSet.getString("fws_eve_event");
 				String eveIdString = resultSet.getString ("fws_eve_id");
 				BigInteger eventId = new BigInteger (eveIdString);
@@ -105,7 +105,7 @@ public class ReadJsonfromMysql {
 		DataObject obj = gson.fromJson(jsondata, DataObject.class);
 		
 		System.out.println("Parsing...");
-		System.out.println(obj);
+		//System.out.println(obj);
 		
 		System.out.println("Done.");
 		return obj;
