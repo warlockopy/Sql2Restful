@@ -37,7 +37,7 @@ public class ReadJsonfromMysql {
 	
 	public static void deleteData (){
 		try {
-			statement.execute("DELETE FROM fws_event WHERE 1=1 ORDER BY fws_eve_id LIMIT 30");
+			statement.execute("DELETE FROM fws_event WHERE 1=1 ORDER BY fws_eve_id LIMIT 100");
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -69,7 +69,7 @@ public class ReadJsonfromMysql {
 	}
 	
 	public static ArrayList<DataObject> connectToDB(){
-		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT 30";
+		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT 100";
 		try {
 			//Se conecta a la base de datos
 			//Class.forName(dbClass);
