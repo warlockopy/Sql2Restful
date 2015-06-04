@@ -57,7 +57,9 @@ public class Process extends Thread{
 			else {
 				if (zeromsg) {
 					System.out.println("0 Mensajes.");
-					zeromsg = false;
+					
+				} else {
+					System.out.println(".");
 				}
 			}
 		}
