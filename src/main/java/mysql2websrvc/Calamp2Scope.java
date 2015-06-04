@@ -102,10 +102,10 @@ public class Calamp2Scope {
 			long utcTimestampSeconds = (udate.getTime () - utc1970.getTime()) / 1000 + timeAdjust;
 			int generalStatus = getGeneralStatus(calampMessage);
 			String 	[] accumulatorsString = calampMessage.getAccumulators();
-			int accumulators [] = new int [accumulatorsString.length];
+			double accumulators [] = new double [accumulatorsString.length];
 			
 			for (int i = 0; i < accumulators.length; ++i)
-				accumulators [i] = Integer.parseInt(accumulatorsString [i]);
+				accumulators [i] = Double.parseDouble(accumulatorsString [i]);
 			
 			int tripDistance;
 			int tripDuration;
@@ -229,9 +229,9 @@ public class Calamp2Scope {
 					break;
 					
 				case ScopeEventCode.TripStartup:
-					tripDistance = accumulators [0];
-					tripDuration = accumulators [1];
-					tripIdentifier = accumulators [2];
+					tripDistance = (int) accumulators [0];
+					tripDuration = (int) accumulators [1];
+					tripIdentifier = (int) accumulators [2];
 					
 					System.err.println ("Trip distance: " + tripDistance);
 					System.err.println ("Trip duration: " + tripDuration);
@@ -248,9 +248,9 @@ public class Calamp2Scope {
 					break;
 					
 				case ScopeEventCode.TripShutdown:
-					tripDistance = accumulators [0];
-					tripDuration = accumulators [1];
-					tripIdentifier = accumulators [2];
+					tripDistance = (int) accumulators [0];
+					tripDuration = (int) accumulators [1];
+					tripIdentifier = (int) accumulators [2];
 					
 					System.err.println ("Trip distance: " + tripDistance);
 					System.err.println ("Trip duration: " + tripDuration);

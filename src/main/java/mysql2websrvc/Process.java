@@ -55,12 +55,7 @@ public class Process extends Thread{
 				
 			}
 			else {
-				if (zeromsg) {
-					System.out.println("0 Mensajes.");
-					
-				} else {
-					System.out.println(".");
-				}
+				System.out.println("0 Mensajes.");
 			}
 		}
 	}
