@@ -144,7 +144,7 @@ public class Calamp2Scope {
 			//Debug
 			if (templateId != ScopeEventCode.UnknownEvent)
 				System.err.println ("Scope event " + templateId + " (Calamp event " + 
-				calampEventCode + ": " + description + ")");
+				calampEventCode + "): " + description);
 			
 			switch (templateId){
 				

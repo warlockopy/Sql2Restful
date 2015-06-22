@@ -1,6 +1,7 @@
 package mysql2websrvc;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -84,25 +85,39 @@ public class Process extends Thread{
 			
 			String toSave = calampString;
 			
+			String mobileId = getMobileIdFrom (calampString);
+			
 			if (sent){
 				toSave += "\n--------\n" + scopeString + "\n--------\n" + serverString + "\n";
 			}
 			else
 				toSave += "\n--------\n" + successCode + "\n";
 			
-			saveString (toSave);
+			saveString (toSave, mobileId);
 		}
 		
 	}
 	
-	private static void saveString (final String string){
+	public static void saveString (final String string, final String mobileId){
 		
 		DateFormat format = new SimpleDateFormat ("yyyy_MM_dd");
 		String dateString = format.format (new Date ());
-		String fileName = "EVENTS_" + dateString + ".txt";
+		String dir = "EVENTS/EVENTS_" + dateString;
+		String fileName = mobileId + ".txt";
+		
+		File directory = new File (dir);
+		String path = directory.getAbsolutePath() + "/" + fileName;
+		
+		System.out.println ("Path: " + directory.getAbsolutePath());
+		
+		if (!directory.exists())
+			if (directory.mkdir() == false)
+				System.out.println ("Error. No se pudo crear el directorio " + directory.getAbsolutePath());
+				
 		
 		try {
-			FileWriter fWriter = new FileWriter (fileName, true);
+			//FileWriter fWriter = new FileWriter (path, true);
+			FileWriter fWriter = new FileWriter (dir + "/" + fileName, true);
 			BufferedWriter writer = new BufferedWriter (fWriter);
 			
 			writer.write(string);
@@ -114,6 +129,25 @@ public class Process extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+			
+	}
+	
+	public static String getMobileIdFrom (final String calampString){
+		String ans = "0";
+		String match = "\"mobileId\":\"";
 		
+		int index = calampString.indexOf(match);
+		
+		if (index != -1){
+			int index1 = index + match.length();
+			int index2 = index1;
+			
+			while (calampString.charAt(index2) != '"')
+				++index2;
+			
+			ans = calampString.substring(index1, index2);
+		}
+		
+		return ans;
 	}
 }

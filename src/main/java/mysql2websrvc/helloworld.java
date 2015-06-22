@@ -39,4 +39,8 @@ public class helloworld {
 	
 	//*/
 	
+	public static void echo (Object obj){
+		System.out.println (obj);
+	}
+	
 }
