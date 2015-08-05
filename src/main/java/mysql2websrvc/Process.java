@@ -69,7 +69,7 @@ public class Process extends Thread{
 					System.out.print(".");
 				}
 				try {
-					sleep (2000);
+					sleep (5000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
