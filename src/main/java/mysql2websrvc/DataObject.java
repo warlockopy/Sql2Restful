@@ -1,5 +1,7 @@
 package mysql2websrvc;
 
+import com.google.gson.Gson;
+
 public class DataObject
 {
     private MessageContents messageContents;

@@ -88,7 +88,7 @@ public class ReadJsonfromMysql {
 				BigInteger eventId = new BigInteger (eveIdString);
 				eventIdList.add (eventId);
 				//System.out.println("Data : " + dato);
-				mysqljsonobject.add(Json2Obj(dato));
+				mysqljsonobject.add(json2Obj(dato));
 			}
 			
 			//connection.close();
@@ -99,7 +99,7 @@ public class ReadJsonfromMysql {
 		return null;
 	}
 	
-	public static DataObject Json2Obj(String jsondata){
+	public static DataObject json2Obj(String jsondata){
 		Gson gson = new Gson();
 		
 		DataObject obj = gson.fromJson(jsondata, DataObject.class);

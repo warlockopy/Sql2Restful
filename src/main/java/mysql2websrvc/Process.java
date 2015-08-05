@@ -23,20 +23,19 @@ public class Process extends Thread{
 		ArrayList <DataObject> calampData;
 		int httpResult = 0;
 		Gson gson = new Gson ();
-		boolean zeromsg = true;
 		
 		while (true){
 
 			calampData = ReadJsonfromMysql.connectToDB();
 			
 			if (calampData.size() > 0){  
-				zeromsg = false;
+
 				String scopeString;
 				
 				try {
 					Success success = Calamp2Scope.toScopeString (calampData);
 					scopeString = success.getScopeString();
-					HttpOutput httpOutput = httprestjava.httpsClientC(scopeString);
+					HttpOutput httpOutput = HttpRest.httpsClientC(scopeString);
 					httpResult = httpOutput.getCode ();
 					String serverOutputString = httpOutput.getOutput ();
 					ServerResponse serverResponse = gson.fromJson(serverOutputString, ServerResponse.class);
@@ -108,7 +107,7 @@ public class Process extends Thread{
 		File directory = new File (dir);
 		String path = directory.getAbsolutePath() + "/" + fileName;
 		
-		System.out.println ("Path: " + directory.getAbsolutePath());
+		//System.out.println ("Path: " + directory.getAbsolutePath());
 		
 		if (!directory.exists())
 			if (directory.mkdir() == false)
@@ -116,7 +115,6 @@ public class Process extends Thread{
 				
 		
 		try {
-			//FileWriter fWriter = new FileWriter (path, true);
 			FileWriter fWriter = new FileWriter (dir + "/" + fileName, true);
 			BufferedWriter writer = new BufferedWriter (fWriter);
 			

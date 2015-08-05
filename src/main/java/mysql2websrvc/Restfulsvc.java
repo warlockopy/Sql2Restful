@@ -31,7 +31,7 @@ import org.apache.http.protocol.HTTP;
 
 import com.google.gson.JsonObject;
 
-public class restfulsvc {
+public class Restfulsvc {
 	public static String urlscope = "https://us.scopemp.net/Scope.MProfiler.ThirdPartyGateway.Api/api/v1/messages";
 	
 	public static void main (String [] args) throws URISyntaxException

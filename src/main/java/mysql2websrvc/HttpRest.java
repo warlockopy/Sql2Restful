@@ -27,9 +27,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import com.google.gson.Gson;
+
 import feedback.HttpOutput;
 
-public class httprestjava {
+public class HttpRest {
 	public static String urlscope = "https://us.scopemp.net/Scope.MProfiler.ThirdPartyGateway.Api/api/v1/messages";
 	public static String ScopeHost = "us.scopemp.net";
 	public static String ScopePath = "/Scope.MProfiler.ThirdPartyGateway.Api/api/v1/messages";
@@ -63,11 +65,12 @@ public class httprestjava {
 		CloseableHttpResponse response = httpclient.execute(post);
 		
 		try {
-			System.out.println("Respuesta del servidor");
+			System.out.println("Http response...");
 			System.out.println(response.getProtocolVersion());
 			httperr = response.getStatusLine().getStatusCode();
 			System.out.println(httperr);
 			System.out.println(response.getStatusLine().getReasonPhrase());
+			System.out.println ();
 			
 			BufferedReader br = new BufferedReader(
 				new InputStreamReader((response.getEntity().getContent())));
@@ -86,6 +89,25 @@ public class httprestjava {
 		}
 		
 		return new HttpOutput (httperr, serverOutputString);
+	}
+	
+	public static HttpOutput send (String jsonString){
+		HttpOutput ans = null;
+		
+		try {
+			ans = httpsClientC (jsonString);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ans;
+	}
+	
+	public static HttpOutput send (ResponsePrototype response){
+		String jsonString = new Gson().toJson (response);
+		
+		return send (jsonString);
 	}
 	
 	public static String makesignature(String apikey, String stringtosign) {

@@ -12,21 +12,22 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.codec.binary.Base64;
 
+import scopeProto.*;
+import scopeProto.BatteryLowProto.BatteryLow;
+import scopeProto.EngineStartProto.EngineStart;
+import scopeProto.EngineStopProto.EngineStop;
+import scopeProto.EventHeaderProto.EventHeader;
+import scopeProto.ExcessiveIdleProto.ExcessiveIdle;
+import scopeProto.GeneralStatusTypeProto.GeneralStatusType;
+import scopeProto.MainPowerHighProto.MainPowerHigh;
+import scopeProto.MainPowerLowProto.MainPowerLow;
+import scopeProto.NonTripPositionProto.NonTripPosition;
+import scopeProto.PeriodicPositionProto.PeriodicPosition;
+import scopeProto.StartOfExcessiveIdleProto.StartOfExcessiveIdle;
+import scopeProto.TripShutdownProto.TripShutdown;
+import scopeProto.TripStartupProto.TripStartup;
+import scopeProto.TripSummaryProto.TripSummary;
 import mysql2websrvc.ScopePrototypes.*;
-import ScopeProtoJava.*;
-import ScopeProtoJava.BatteryLowProto.BatteryLow;
-import ScopeProtoJava.EngineStartProto.EngineStart;
-import ScopeProtoJava.EngineStopProto.EngineStop;
-import ScopeProtoJava.EventHeaderProto.EventHeader;
-import ScopeProtoJava.ExcessiveIdleProto.ExcessiveIdle;
-import ScopeProtoJava.GeneralStatusTypeProto.GeneralStatusType;
-import ScopeProtoJava.MainPowerHighProto.MainPowerHigh;
-import ScopeProtoJava.MainPowerLowProto.MainPowerLow;
-import ScopeProtoJava.PeriodicPositionProto.PeriodicPosition;
-import ScopeProtoJava.StartOfExcessiveIdleProto.StartOfExcessiveIdle;
-import ScopeProtoJava.TripShutdownProto.TripShutdown;
-import ScopeProtoJava.TripStartupProto.TripStartup;
-import ScopeProtoJava.TripSummaryProto.TripSummary;
 
 import com.google.gson.Gson;
 
@@ -50,8 +51,6 @@ public class Calamp2Scope {
 		}
 		return ans;
 	}
-
-
 
 	public static Success toScopeString (ArrayList <DataObject> datos) throws ParseException, IOException{
 		
@@ -265,6 +264,19 @@ public class Calamp2Scope {
 						.build();
 					
 					bytes = tripShutdown.toByteArray();
+					
+					break;
+				
+				case ScopeEventCode.NonTripPosition:
+					
+					NonTripPosition nonTripPosition = NonTripPosition
+					.newBuilder()
+					.setHeader(commonHeader)
+					.build ();
+				
+					bytes = nonTripPosition.toByteArray();;
+					
+					break;
 					
 				default:
 					System.err.println ("Unknown Calamp event " + calampEventCode);

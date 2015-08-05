@@ -28,6 +28,11 @@ public class ScopeTemplateIdAndDescription {
 				description = "EngineStop";
 				break;
 				
+			case CalampEventCode.NotMovingSReport:
+				templateId =  ScopeEventCode.NonTripPosition;
+				description = "NonTripPosition";
+				break;
+				
 			case CalampEventCode.ExcessiveIdle:
 				templateId = ScopeEventCode.ExcessiveIdle;
 				description = "ExcessiveIdle";

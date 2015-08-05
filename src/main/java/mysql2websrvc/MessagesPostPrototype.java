@@ -34,11 +34,11 @@ public class MessagesPostPrototype {
 		this.id = id;
 	}
 	
-	void setUnitId (String uid){
+	public void setUnitId (String uid){
 		unit_id = uid;
 	}
 	
-	void setTemplateId (int tmpId){
+	public void setTemplateId (int tmpId){
 		template_id = tmpId;
 	}
 	
