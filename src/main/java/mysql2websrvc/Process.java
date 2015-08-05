@@ -23,12 +23,17 @@ public class Process extends Thread{
 		ArrayList <DataObject> calampData;
 		int httpResult = 0;
 		Gson gson = new Gson ();
-		
-		while (true){
+		boolean zeromsg = false;
 
+		while (true){
+			//zeromsg = true;
 			calampData = ReadJsonfromMysql.connectToDB();
 			
 			if (calampData.size() > 0){  
+
+				zeromsg = true;
+
+
 
 				String scopeString;
 				
@@ -55,8 +60,21 @@ public class Process extends Thread{
 				
 			}
 			else {
-				System.out.println("0 Mensajes.");
-			}
+				if (zeromsg){
+					System.out.println("0 Mensajes.");
+					zeromsg = false;
+					
+				}
+				else{
+					System.out.print(".");
+				}
+				try {
+					sleep (2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				}
 		}
 	}
 	
