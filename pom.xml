@@ -53,7 +53,7 @@
   			<configuration>
   				<archive>
   					<manifest>
-  						<mainClass>mysql2websrvc.helloworld</mainClass>
+  						<mainClass>mysql2websrvc.HelloWorld</mainClass>
   					</manifest>
   				</archive>
   				<descriptorRefs>
