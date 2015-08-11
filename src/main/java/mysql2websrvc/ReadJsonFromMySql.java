@@ -68,24 +68,25 @@ public class ReadJsonFromMySql {
 		}
 	}
 	
-	public static ArrayList <String> readAsStrings (){
+	public static ArrayList <String> readRawData (){
 		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT 100";
 		try {
 			ResultSet resultSet = statement.executeQuery(query);
-			ArrayList <String> events = new ArrayList();
+			ArrayList <String> rawData = new ArrayList();
 			eventIdList = new ArrayList ();
 			
 			while (resultSet.next()) {				
 				String tableName = resultSet.getString(1);
 				String dato = resultSet.getString("fws_eve_event");
+				String rawdata = resultSet.getString("fws_eve_raw_data");
 				String eveIdString = resultSet.getString ("fws_eve_id");
 				BigInteger eventId = new BigInteger (eveIdString);
 				eventIdList.add (eventId);
-				events.add(dato);
+				rawData.add(dato);
 			}
 			
 			//connection.close();
-			return events;
+			return rawData;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

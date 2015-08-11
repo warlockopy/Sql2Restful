@@ -27,10 +27,10 @@ public class Process extends Thread{
 
 		while (true){
 			//zeromsg = true;
-			ArrayList <String> calampStrings  = ReadJsonFromMySql.readAsStrings ();
 			calampData = ReadJsonFromMySql.connectToDB();
+			ArrayList <String> rawData = ReadJsonFromMySql.readRawData ();
 			
-			if (calampStrings.size() > 0){  
+			if (calampData.size() > 0){  
 
 				zeromsg = true;
 
@@ -44,7 +44,7 @@ public class Process extends Thread{
 					String serverOutputString = httpOutput.getOutput ();
 					ServerResponse serverResponse = gson.fromJson(serverOutputString, ServerResponse.class);
 					//saveEvents (calampData, success, serverResponse);
-					saveEvents (calampStrings, success, serverResponse);
+					saveEvents (rawData, calampData, success, serverResponse);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
@@ -115,10 +115,10 @@ public class Process extends Thread{
 		
 	}*/
 	
-	public static void saveEvents (final ArrayList <String> calampStrings,
+	public static void saveEvents (final ArrayList <String> rawData, final ArrayList <DataObject> calampData,
 			final Success success, final ServerResponse serverResponse){
 		
-		int n = calampStrings.size (), m = serverResponse.size ();
+		int n = calampData.size (), m = serverResponse.size ();
 		int responseIndex = 0;
 		Gson gson = new Gson ();
 		
@@ -126,8 +126,8 @@ public class Process extends Thread{
 				+ ", (" + m + (m == 1 ? " is" : " are") + " valid)");
 		
 		for (int i = 0; i < n; ++i){
-			//String calampString = gson.toJson (calampData.get(i));
-			String calampString = calampStrings.get(i);
+			String rawDataString = rawData.get(i);
+			String calampString = gson.toJson (calampData.get(i));
 			String scopeString = "";
 			String serverString = "";
 			String successCode = success.getSuccessCodeAt(i);
@@ -139,7 +139,7 @@ public class Process extends Thread{
 				++responseIndex;
 			}
 			
-			String toSave = calampString;
+			String toSave = rawDataString + "\n--------\n"  + calampString;
 			String mobileId = getMobileIdFrom (calampString);
 			
 			if (sent){
@@ -161,9 +161,8 @@ public class Process extends Thread{
 		String fileName = mobileId + ".txt";
 		
 		File directory = new File (dir);
-		String path = directory.getAbsolutePath() + "/" + fileName;
-		
-		//System.out.println ("Path: " + directory.getAbsolutePath());
+		//String path = directory.getAbsolutePath() + "/" + fileName;
+		String path = "/" + dir + fileName;
 		
 		if (!directory.exists())
 			if (directory.mkdir() == false)
@@ -202,7 +201,7 @@ public class Process extends Thread{
 			ans = calampString.substring(index1, index2);
 		}
 		
-		System.out.println ("********\nMOBILE ID = " + ans + "\n********");
+		System.out.println ("MOBILE ID = " + ans);
 		
 		return ans;
 	}
