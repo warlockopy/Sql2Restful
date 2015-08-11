@@ -170,7 +170,7 @@ public class Process extends Thread{
 				
 		
 		try {
-			FileWriter fWriter = new FileWriter (path, true);
+			FileWriter fWriter = new FileWriter ("/" + dir + "/" + fileName, true);
 			BufferedWriter writer = new BufferedWriter (fWriter);
 			
 			writer.write(string);
