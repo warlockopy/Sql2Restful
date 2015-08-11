@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
-public class ReadJsonfromMysql {
+public class ReadJsonFromMySql {
 	private static String dbUrl = "jdbc:mysql://209.208.110.219/f_workstation";
 	private static String dbClass = "com.mysql.jdbc.Driver";
 	private static String username = "root";
@@ -68,7 +68,31 @@ public class ReadJsonfromMysql {
 		}
 	}
 	
-	public static ArrayList<DataObject> connectToDB(){
+	public static ArrayList <String> readAsStrings (){
+		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT 100";
+		try {
+			ResultSet resultSet = statement.executeQuery(query);
+			ArrayList <String> events = new ArrayList();
+			eventIdList = new ArrayList ();
+			
+			while (resultSet.next()) {				
+				String tableName = resultSet.getString(1);
+				String dato = resultSet.getString("fws_eve_event");
+				String eveIdString = resultSet.getString ("fws_eve_id");
+				BigInteger eventId = new BigInteger (eveIdString);
+				eventIdList.add (eventId);
+				events.add(dato);
+			}
+			
+			//connection.close();
+			return events;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static ArrayList <DataObject> connectToDB(){
 		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT 100";
 		try {
 			//Se conecta a la base de datos

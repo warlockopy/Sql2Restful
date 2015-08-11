@@ -38,7 +38,7 @@ public class HttpRest {
 	public static String username = "PYLS", password = "Dn1f8C5XeJj42AzG";
 	
 	
-	public static HttpOutput httpsClientC(String datoJson) throws Exception {
+	public static HttpOutput httpsClientC (String datoJson) throws Exception {
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpPost post = new HttpPost(urlscope);

@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.util.Scanner;
 
 import mysql2websrvc.Process;
-import mysql2websrvc.ReadJsonfromMysql;
+import mysql2websrvc.ReadJsonFromMySql;
 
 import com.google.gson.Gson;
 
@@ -39,7 +39,7 @@ public class HelloWorld {
 		Process process = new Process ();
 		
 		try{
-			ReadJsonfromMysql.open();
+			ReadJsonFromMySql.open();
 			System.out.println("SQL Opened.");
 			System.out.println("Comienza Hilo...");
 			process.start();
@@ -47,7 +47,7 @@ public class HelloWorld {
 			while (!sc.next ().equals ("exit"));
 			
 			process.interrupt();
-			ReadJsonfromMysql.close();
+			ReadJsonFromMySql.close();
 			sc.close ();
 			System.exit(0);
 		}
