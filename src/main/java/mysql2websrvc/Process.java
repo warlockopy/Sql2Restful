@@ -30,7 +30,7 @@ public class Process extends Thread{
 			ArrayList <String> calampStrings  = ReadJsonFromMySql.readAsStrings ();
 			calampData = ReadJsonFromMySql.connectToDB();
 			
-			if (calampData.size() > 0){  
+			if (calampStrings.size() > 0){  
 
 				zeromsg = true;
 
@@ -140,7 +140,6 @@ public class Process extends Thread{
 			}
 			
 			String toSave = calampString;
-			
 			String mobileId = getMobileIdFrom (calampString);
 			
 			if (sent){
@@ -191,7 +190,7 @@ public class Process extends Thread{
 		String ans = "0";
 		String match = "\"mobileId\":\"";
 		
-		int index = calampString.indexOf(match);
+		int index = calampString.lastIndexOf(match);
 		
 		if (index != -1){
 			int index1 = index + match.length();
@@ -202,6 +201,8 @@ public class Process extends Thread{
 			
 			ans = calampString.substring(index1, index2);
 		}
+		
+		System.out.println ("********\nMOBILE ID = " + ans + "\n********");
 		
 		return ans;
 	}
