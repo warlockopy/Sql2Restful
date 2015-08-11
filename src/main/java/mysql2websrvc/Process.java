@@ -157,12 +157,12 @@ public class Process extends Thread{
 		
 		DateFormat format = new SimpleDateFormat ("yyyy_MM_dd");
 		String dateString = format.format (new Date ());
-		String dir = "EVENTS/EVENTS_" + dateString;
+		String dir = "/home/sistema/EVENTS/EVENTS_" + dateString;
 		String fileName = mobileId + ".txt";
 		
 		File directory = new File (dir);
 		//String path = directory.getAbsolutePath() + "/" + fileName;
-		String path = "/" + dir + fileName;
+		String path = "/home/sistema" + dir + fileName;
 		
 		if (!directory.exists())
 			if (directory.mkdir() == false)
@@ -170,7 +170,7 @@ public class Process extends Thread{
 				
 		
 		try {
-			FileWriter fWriter = new FileWriter ("/" + dir + "/" + fileName, true);
+			FileWriter fWriter = new FileWriter (dir + "/" + fileName, true);
 			BufferedWriter writer = new BufferedWriter (fWriter);
 			
 			writer.write(string);
