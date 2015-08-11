@@ -82,6 +82,10 @@ public class ReadJsonFromMySql {
 				BigInteger eventId = new BigInteger (eveIdString);
 				eventIdList.add (eventId);
 				events.add(dato);
+				
+				System.out.println ("***\nEvento en bruto:");
+				System.out.println (dato);
+				System.out.println ("***");
 			}
 			
 			//connection.close();

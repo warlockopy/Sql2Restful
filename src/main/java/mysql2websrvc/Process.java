@@ -122,7 +122,8 @@ public class Process extends Thread{
 		int responseIndex = 0;
 		Gson gson = new Gson ();
 		
-		System.out.println ("Saving " + n + " messages, (" + m + " are valid)");
+		System.out.println ("Saving " + n + " message" + (n == 1 ? "" : "s") 
+				+ ", (" + m + (m == 1 ? " is" : " are") + " valid)");
 		
 		for (int i = 0; i < n; ++i){
 			//String calampString = gson.toJson (calampData.get(i));
