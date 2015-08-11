@@ -77,12 +77,12 @@ public class ReadJsonFromMySql {
 			
 			while (resultSet.next()) {				
 				String tableName = resultSet.getString(1);
-				String dato = resultSet.getString("fws_eve_event");
-				String rawdata = resultSet.getString("fws_eve_raw_data");
+				//String dato = resultSet.getString("fws_eve_event");
+				String rawDataString = resultSet.getString("fws_eve_raw_data");
 				String eveIdString = resultSet.getString ("fws_eve_id");
 				BigInteger eventId = new BigInteger (eveIdString);
 				eventIdList.add (eventId);
-				rawData.add(dato);
+				rawData.add(rawDataString);
 			}
 			
 			//connection.close();
