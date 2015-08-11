@@ -189,7 +189,7 @@ public class Process extends Thread{
 		String ans = "0";
 		String match = "\"mobileId\":\"";
 		
-		int index = calampString.lastIndexOf(match);
+		int index = calampString.indexOf(match);
 		
 		if (index != -1){
 			int index1 = index + match.length();
