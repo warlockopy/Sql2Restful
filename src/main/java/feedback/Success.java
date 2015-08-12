@@ -40,4 +40,8 @@ public class Success {
 		
 		return n;
 	}
+	
+	public int countSuccessCodes (){
+		return successCodes.size ();
+	}
 }

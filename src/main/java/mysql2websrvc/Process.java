@@ -147,6 +147,13 @@ public class Process extends Thread{
 		int responseIndex = 0;
 		Gson gson = new Gson ();
 		
+		System.out.println ("**************");
+		System.out.println ("Event Objects: " + calampData.size ());
+		System.out.println ("Raw data count: " + rawData.size ());
+		System.out.println ("Success codes: " + success.countSuccessCodes());
+		System.out.println ("Messages sent: " + serverResponse.size());
+		System.out.println ("**************");
+		
 		System.out.println ("Saving " + n + " message" + (n == 1 ? "" : "s") 
 				+ ", (" + m + (m == 1 ? " is" : " are") + " valid)");
 		
@@ -191,7 +198,7 @@ public class Process extends Thread{
 		
 		if (!directory.exists())
 			if (directory.mkdir() == false)
-				System.out.println ("Error. No se pudo crear el directorio " + directory.getAbsolutePath());
+				System.out.println ("Error. No se pudo crear el directorio " + path);
 				
 		
 		try {
@@ -210,6 +217,7 @@ public class Process extends Thread{
 			
 	}
 	
+	
 	public static String getMobileIdFrom (final String calampString){
 		String ans = "0";
 		String match = "\"mobileId\":\"";
@@ -226,7 +234,7 @@ public class Process extends Thread{
 			ans = calampString.substring(index1, index2);
 		}
 		
-		System.out.println ("MOBILE ID = " + ans);
+		//System.out.println ("MOBILE ID = " + ans);
 		
 		return ans;
 	}
