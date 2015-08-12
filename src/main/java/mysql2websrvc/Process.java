@@ -166,7 +166,7 @@ public class Process extends Thread{
 			boolean sent = successCode.equals ("sent");
 			
 			if (sent){
-				scopeString = success.getMessageAt(i);
+				scopeString = success.getMessageAt(responseIndex);
 				serverString = serverResponse.getResultAt(responseIndex);
 				++responseIndex;
 			}
