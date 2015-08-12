@@ -290,11 +290,10 @@ public class Calamp2Scope {
 				saveHeader (gson.toJson(commonHeader));
 				successCode = "sent";
 				++itemsToSend;
+				scopeMessageList.add(gson.toJson(message));
 			}
 			
-			successList.add(successCode);
-			scopeMessageList.add(gson.toJson(message));
-			
+			successList.add(successCode);			
 		}
 		
 		String scopeString = gson.toJson(response);

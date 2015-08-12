@@ -2,14 +2,20 @@ package main;
 
 import java.io.*;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import mysql2websrvc.Calamp2Scope;
+import mysql2websrvc.DataObject;
+import mysql2websrvc.HttpRest;
 import mysql2websrvc.Process;
 import mysql2websrvc.ReadJsonFromMySql;
 
 import com.google.gson.Gson;
 
 import emuGeo.Emulacion;
+import feedback.HttpOutput;
+import feedback.Success;
 
 
 public class HelloWorld {
@@ -17,9 +23,20 @@ public class HelloWorld {
 	static Gson gson = new Gson ();
 	
 	//*
-	public static void main (String [] args) throws IOException
+	public static void main (String [] args) throws Exception
 	{
 		Scanner sc = new Scanner (System.in);
+		
+		String calamp = sc.nextLine ();
+		DataObject dObj = ReadJsonFromMySql.json2Obj(calamp);
+		ArrayList <DataObject> data = new ArrayList ();
+		data.add (dObj);
+		Success success = Calamp2Scope.toScopeString(data);
+		String scope = success.getScopeString();
+		HttpOutput out = HttpRest.httpsClientC(scope);
+		echo (out.getOutput());
+		
+		System.exit(0);
 		
 		//Enviar geocercas
 		/*

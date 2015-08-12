@@ -69,17 +69,6 @@ public class Process extends Thread{
 						}
 					}
 					
-					//Test
-					for (int i = 0; i < serverResponse.size (); ++i){
-						BigInteger eventId = ReadJsonFromMySql.getEventIdAt(i);
-						
-						if (eventId.equals ("5294000")){
-							System.err.println ("Special SQL COPY EVENT ID " + eventId);
-							ReadJsonFromMySql.copy (eventId);
-						}
-					}
-					//End test
-					
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
