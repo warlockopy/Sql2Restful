@@ -45,11 +45,19 @@ public class Process extends Thread{
 				try {
 					Success success = Calamp2Scope.toScopeString (calampData);
 					scopeString = success.getScopeString();
-					HttpOutput httpOutput = HttpRest.httpsClientC(scopeString);
-					httpResult = httpOutput.getCode ();
-					String serverOutputString = httpOutput.getOutput ();
-					ServerResponse serverResponse = gson.fromJson(serverOutputString, ServerResponse.class);
-					//saveEvents (calampData, success, serverResponse);
+					ServerResponse serverResponse = null;
+					
+					if (success.hasMessagesToSend()){
+						HttpOutput httpOutput = HttpRest.httpsClientC(scopeString);
+						httpResult = httpOutput.getCode ();
+						String serverOutputString = httpOutput.getOutput ();
+						serverResponse = gson.fromJson(serverOutputString, ServerResponse.class);
+					}
+					else{
+						System.out.println ("No messages to send");
+						serverResponse = new ServerResponse ();
+					}
+					
 					saveEvents (rawData, calampData, success, serverResponse);
 					
 					for (int i = 0; i < serverResponse.size (); ++i){

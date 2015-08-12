@@ -72,6 +72,7 @@ public class Calamp2Scope {
 		ArrayList <String> scopeMessageList = new ArrayList ();
 		int calampEventCode;
 		EventHeader commonHeader;
+		int itemsToSend = 0;
 		
 		for (DataObject arrayElement : datos){
 			
@@ -288,6 +289,7 @@ public class Calamp2Scope {
 				response.addMessage (message);
 				saveHeader (gson.toJson(commonHeader));
 				successCode = "sent";
+				++itemsToSend;
 			}
 			
 			successList.add(successCode);
@@ -300,7 +302,7 @@ public class Calamp2Scope {
 		
 		if (bw != null) bw.close ();
 		
-		return new Success (scopeString, scopeMessageList, successList);
+		return new Success (scopeString, scopeMessageList, successList, itemsToSend > 0);
 
 	}
 		
