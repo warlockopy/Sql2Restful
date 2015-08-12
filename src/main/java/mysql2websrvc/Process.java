@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,8 +28,9 @@ public class Process extends Thread{
 
 		while (true){
 			//zeromsg = true;
-			calampData = ReadJsonFromMySql.connectToDB();
-			ArrayList <String> rawData = ReadJsonFromMySql.readRawData ();
+			calampData = ReadJsonFromMySql.connectToDB(100);
+			int itemsRead = calampData.size ();
+			ArrayList <String> rawData = ReadJsonFromMySql.readRawData (itemsRead);	
 			
 			if (calampData.size() > 0){  
 
@@ -45,6 +47,15 @@ public class Process extends Thread{
 					ServerResponse serverResponse = gson.fromJson(serverOutputString, ServerResponse.class);
 					//saveEvents (calampData, success, serverResponse);
 					saveEvents (rawData, calampData, success, serverResponse);
+					
+					for (int i = 0; i < serverResponse.size (); ++i){
+						if (!serverResponse.getResultAt(i).equals("Ok")){
+							BigInteger eventId = ReadJsonFromMySql.getEventIdAt(i);
+							
+							System.err.println ("SQL COPY EVENT ID " + eventId);
+							ReadJsonFromMySql.copy (eventId);
+						}
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
@@ -54,7 +65,7 @@ public class Process extends Thread{
 				}	
 				
 				if (httpResult == 200 || httpResult == 404) { 
-					ReadJsonFromMySql.deleteData();
+					ReadJsonFromMySql.deleteData(itemsRead); //No borrará más de lo que leyó
 					System.out.println("Proceso de borrado MySql...");
 				}
 				

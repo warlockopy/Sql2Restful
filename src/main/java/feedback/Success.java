@@ -25,4 +25,12 @@ public class Success {
 	public String getMessageAt (int index){
 		return scopeMessages.get(index);
 	}
+	
+	public int countItems (){
+		int n = scopeMessages.size ();
+		
+		if (successCodes.size () != n) System.err.println ("Error. Longitudes diferentes");
+		
+		return n;
+	}
 }

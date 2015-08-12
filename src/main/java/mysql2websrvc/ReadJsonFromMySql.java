@@ -35,9 +35,10 @@ public class ReadJsonFromMySql {
 		}
 	}
 	
-	public static void deleteData (){
+	public static void deleteData (int limit){
 		try {
-			statement.execute("DELETE FROM fws_event WHERE 1=1 ORDER BY fws_eve_id LIMIT 100");
+			statement.execute("DELETE FROM fws_event WHERE 1=1 ORDER BY fws_eve_id LIMIT " + limit);
+			eventIdList.clear(); //Cuando borra los registros limpia la lista de IDs
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -55,8 +56,24 @@ public class ReadJsonFromMySql {
 		}*/
 	}
 	
+	public static void copy (BigInteger eventId){
+		final String query = "INSERT INTO fws_queue SELECT * FROM "
+				 + "fws_event WHERE fws_eve_id=\"" + eventId + "\"";
+		
+		try {
+			statement.execute(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public static ArrayList <BigInteger> getEventIdList (){
 		return eventIdList;
+	}
+	
+	public static BigInteger getEventIdAt (int index){
+		return eventIdList.get(index);
 	}
 	
 	public static void close (){
@@ -68,8 +85,9 @@ public class ReadJsonFromMySql {
 		}
 	}
 	
-	public static ArrayList <String> readRawData (){
-		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT 100";
+	public static ArrayList <String> readRawData (int limit){
+		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT " + limit;
+		
 		try {
 			ResultSet resultSet = statement.executeQuery(query);
 			ArrayList <String> rawData = new ArrayList();
@@ -79,9 +97,6 @@ public class ReadJsonFromMySql {
 				String tableName = resultSet.getString(1);
 				//String dato = resultSet.getString("fws_eve_event");
 				String rawDataString = resultSet.getString("fws_eve_raw_data");
-				String eveIdString = resultSet.getString ("fws_eve_id");
-				BigInteger eventId = new BigInteger (eveIdString);
-				eventIdList.add (eventId);
 				rawData.add(rawDataString);
 			}
 			
@@ -93,8 +108,8 @@ public class ReadJsonFromMySql {
 		return null;
 	}
 	
-	public static ArrayList <DataObject> connectToDB(){
-		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT 100";
+	public static ArrayList <DataObject> connectToDB(int limit){
+		String query = "SELECT * FROM fws_event ORDER BY fws_eve_id LIMIT " + limit;
 		try {
 			//Se conecta a la base de datos
 			//Class.forName(dbClass);
