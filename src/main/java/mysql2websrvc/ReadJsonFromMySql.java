@@ -150,4 +150,8 @@ public class ReadJsonFromMySql {
 		System.out.println("Done.");
 		return obj;
 	}
+
+	public static void clearIdList() {
+		eventIdList.clear ();
+	}
 }

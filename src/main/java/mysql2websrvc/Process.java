@@ -92,6 +92,7 @@ public class Process extends Thread{
 					ReadJsonFromMySql.deleteData(itemsRead); //No borrará más de lo que leyó
 					System.out.println("Proceso de borrado MySql...");
 				}
+				else ReadJsonFromMySql.clearIdList ();
 				
 			}
 			else {
