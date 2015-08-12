@@ -27,6 +27,7 @@ public class HelloWorld {
 	{
 		Scanner sc = new Scanner (System.in);
 		
+		/* Enviar un reporte calamp
 		String calamp = sc.nextLine ();
 		DataObject dObj = ReadJsonFromMySql.json2Obj(calamp);
 		ArrayList <DataObject> data = new ArrayList ();
@@ -37,6 +38,7 @@ public class HelloWorld {
 		echo (out.getOutput());
 		
 		System.exit(0);
+		*/
 		
 		//Enviar geocercas
 		/*
