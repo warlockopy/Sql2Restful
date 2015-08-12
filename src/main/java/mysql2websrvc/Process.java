@@ -31,6 +31,10 @@ public class Process extends Thread{
 			calampData = ReadJsonFromMySql.connectToDB(100);
 			int itemsRead = calampData.size ();
 			ArrayList <String> rawData = ReadJsonFromMySql.readRawData (itemsRead);	
+			int rawDataSize = rawData.size ();
+			
+			System.out.println ("-----Raw Data Items / Event Items = " + itemsRead + " / " + rawDataSize);
+			
 			
 			if (calampData.size() > 0){  
 
