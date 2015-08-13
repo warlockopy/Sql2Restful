@@ -27,14 +27,13 @@ public class Process extends Thread{
 		boolean zeromsg = false;
 
 		while (true){
-			//zeromsg = true;
+
 			calampData = ReadJsonFromMySql.connectToDB(100);
 			int itemsRead = calampData.size ();
 			ArrayList <String> rawData = ReadJsonFromMySql.readRawData (itemsRead);	
 			int rawDataSize = rawData.size ();
 			
-			System.out.println ("-----Raw Data Items / Event Items = " + itemsRead + " / " + rawDataSize);
-			
+			//System.out.println ("-----Raw Data Items / Event Items = " + itemsRead + " / " + rawDataSize);
 			
 			if (calampData.size() > 0){  
 
@@ -62,7 +61,7 @@ public class Process extends Thread{
 					
 					for (int i = 0; i < serverResponse.size (); ++i){
 						if (!serverResponse.getResultAt(i).equals("Ok")){
-							BigInteger eventId = ReadJsonFromMySql.getEventIdAt(i);
+							BigInteger eventId = ReadJsonFromMySql.getEventIdAt(i); //Llamar a connectToDB() antes
 							
 							System.err.println ("SQL COPY EVENT ID " + eventId);
 							ReadJsonFromMySql.copy (eventId);
@@ -102,44 +101,6 @@ public class Process extends Thread{
 		}
 	}
 	
-	/*
-	public static void saveEvents (final ArrayList <DataObject> calampData,
-			final Success success, final ServerResponse serverResponse){
-		
-		int n = calampData.size (), m = serverResponse.size ();
-		int responseIndex = 0;
-		Gson gson = new Gson ();
-		
-		System.out.println ("Saving " + n + " messages, (" + m + " are valid)");
-		
-		for (int i = 0; i < n; ++i){
-			String calampString = gson.toJson (calampData.get(i));
-			String scopeString = "";
-			String serverString = "";
-			String successCode = success.getSuccessCodeAt(i);
-			boolean sent = successCode.equals ("sent");
-			
-			if (sent){
-				scopeString = success.getMessageAt(i);
-				serverString = serverResponse.getResultAt(responseIndex);
-				++responseIndex;
-			}
-			
-			String toSave = calampString;
-			
-			String mobileId = getMobileIdFrom (calampString);
-			
-			if (sent){
-				toSave += "\n--------\n" + scopeString + "\n--------\n" + serverString + "\n";
-			}
-			else
-				toSave += "\n--------\n" + successCode + "\n";
-			
-			saveString (toSave, mobileId);
-		}
-		
-	}*/
-	
 	public static void saveEvents (final ArrayList <String> rawData, final ArrayList <DataObject> calampData,
 			final Success success, final ServerResponse serverResponse){
 		
@@ -147,12 +108,12 @@ public class Process extends Thread{
 		int responseIndex = 0;
 		Gson gson = new Gson ();
 		
-		System.out.println ("**************");
-		System.out.println ("Event Objects: " + calampData.size ());
-		System.out.println ("Raw data count: " + rawData.size ());
-		System.out.println ("Success codes: " + success.countSuccessCodes());
-		System.out.println ("Messages sent: " + serverResponse.size());
-		System.out.println ("**************");
+		//System.out.println ("**************");
+		//System.out.println ("Event Objects: " + calampData.size ());
+		//System.out.println ("Raw data count: " + rawData.size ());
+		//System.out.println ("Success codes: " + success.countSuccessCodes());
+		//System.out.println ("Messages sent: " + serverResponse.size());
+		//System.out.println ("**************");
 		
 		System.out.println ("Saving " + n + " message" + (n == 1 ? "" : "s") 
 				+ ", (" + m + (m == 1 ? " is" : " are") + " valid)");

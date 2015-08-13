@@ -44,7 +44,7 @@ public class Calamp2Scope {
 		//Ignicion
 		if (message.getInputs().getIgnition().compareTo("on") == 0) {
 			ans |= GeneralStatusType.GENERAL_STATUS_IGNITION_VALUE;
-			System.err.println("Ingnicion ON.");
+			//System.err.println("Ingnicion ON.");
 		}
 		if (Integer.parseInt(message.getEventCode()) == CalampEventCode.OffMainPower){
 			ans |= GeneralStatusType.GENERAL_STATUS_BATTERY_VALUE;

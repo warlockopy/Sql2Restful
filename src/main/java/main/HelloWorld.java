@@ -1,6 +1,7 @@
 package main;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -26,6 +27,9 @@ public class HelloWorld {
 	public static void main (String [] args) throws Exception
 	{
 		Scanner sc = new Scanner (System.in);
+		ReadJsonFromMySql.open();
+		ReadJsonFromMySql.copy (new BigInteger ("5449700"));
+		System.exit (0);
 		
 		/* Enviar un reporte calamp
 		String calamp = sc.nextLine ();

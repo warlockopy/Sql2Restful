@@ -141,13 +141,12 @@ public class ReadJsonFromMySql {
 	
 	public static DataObject json2Obj(String jsondata){
 		Gson gson = new Gson();
-		
 		DataObject obj = gson.fromJson(jsondata, DataObject.class);
 		
-		System.out.println("Parsing...");
+		//System.out.println("Parsing...");
 		//System.out.println(obj);
+		//System.out.println("Done.");
 		
-		System.out.println("Done.");
 		return obj;
 	}
 
