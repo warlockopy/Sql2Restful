@@ -109,10 +109,12 @@ public class Calamp2Scope {
 			for (int i = 0; i < accumulators.length; ++i)
 				accumulators [i] = Double.parseDouble(accumulatorsString [i]);
 			
-			int tripDistance;
-			int tripDuration;
-			int tripIdentifier;
+			int tripDistanceMeters = 0;
+			int tripDurationSeconds = 0;
+			int tripIdentifier = 0;
 			
+			if (accumulators.length >= 1) tripDistanceMeters = (int) accumulators [0];
+			if (accumulators.length >= 2) tripDurationSeconds = (int) accumulators [1];
 			if (accumulators.length >= 8){
 				odometer = (int) accumulators [7] / 1000; //In km
 				System.out.println ("---Odometer: " + odometer + " meters.");
@@ -159,6 +161,8 @@ public class Calamp2Scope {
 					PeriodicPosition periodicPosition = PeriodicPosition
 						.newBuilder()
 						.setHeader(commonHeader)
+						.setTripDistanceMeters(tripDistanceMeters)
+						.setTripDurationSeconds(tripDurationSeconds)
 						.build ();
 					
 					bytes = periodicPosition.toByteArray();
@@ -236,12 +240,12 @@ public class Calamp2Scope {
 					break;
 					
 				case ScopeEventCode.TripStartup:
-					tripDistance = (int) accumulators [0];
-					tripDuration = (int) accumulators [1];
+					//tripDistance = (int) accumulators [0];
+					//tripDuration = (int) accumulators [1];
 					tripIdentifier = (int) accumulators [2];
 					
-					System.err.println ("Trip distance: " + tripDistance);
-					System.err.println ("Trip duration: " + tripDuration);
+					System.err.println ("Trip distance: " + tripDistanceMeters);
+					System.err.println ("Trip duration: " + tripDurationSeconds);
 					System.err.println ("Trip id: " + tripIdentifier);
 					
 					TripStartup tripStartup = TripStartup
@@ -255,19 +259,19 @@ public class Calamp2Scope {
 					break;
 					
 				case ScopeEventCode.TripShutdown:
-					tripDistance = (int) accumulators [0];
-					tripDuration = (int) accumulators [1];
+					//tripDistance = (int) accumulators [0];
+					//tripDuration = (int) accumulators [1];
 					tripIdentifier = (int) accumulators [2];
 					
-					System.err.println ("Trip distance: " + tripDistance);
-					System.err.println ("Trip duration: " + tripDuration);
+					System.err.println ("Trip distance: " + tripDistanceMeters);
+					System.err.println ("Trip duration: " + tripDurationSeconds);
 					System.err.println ("Trip id: " + tripIdentifier);
 					
 					TripShutdown tripShutdown = TripShutdown
 						.newBuilder()
 						.setHeader(commonHeader)
-						.setTripDistanceMeters(tripDistance)
-						.setTripDurationSeconds(tripDuration)
+						.setTripDistanceMeters(tripDistanceMeters)
+						.setTripDurationSeconds(tripDurationSeconds)
 						.setTripId(tripIdentifier)
 						.build();
 					
