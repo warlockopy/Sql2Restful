@@ -113,8 +113,10 @@ public class Calamp2Scope {
 			int tripDuration;
 			int tripIdentifier;
 			
-			if (accumulators.length >= 8)
+			if (accumulators.length >= 8){
 				odometer = (int) accumulators [7] / 1000; //In km
+				System.out.println ("---Odometer: " + odometer + " meters.");
+			}
 			
 			commonHeader = EventHeader.newBuilder()
 					.setDescription(description)
