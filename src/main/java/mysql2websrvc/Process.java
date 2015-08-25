@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -28,12 +27,11 @@ public class Process extends Thread{
 
 		while (true){
 
-			calampData = ReadJsonFromMySql.connectToDB(100);
+			calampData = ReadJsonFromMySql.connectToDB (100); //Limit to 100 rows
 			int itemsRead = calampData.size ();
 			ArrayList <String> rawData = ReadJsonFromMySql.readRawData (itemsRead);	
-			int rawDataSize = rawData.size ();
 			
-			//System.out.println ("-----Raw Data Items / Event Items = " + itemsRead + " / " + rawDataSize);
+			//System.out.println ("-----Raw Data Items / Event Items = " + itemsRead + " / " + rawData.size());
 			
 			if (calampData.size() > 0){  
 
@@ -63,7 +61,7 @@ public class Process extends Thread{
 						if (!serverResponse.getResultAt(i).equals("Ok")){
 							BigInteger eventId = ReadJsonFromMySql.getEventIdAt(i); //Llamar a connectToDB() antes
 							
-							System.err.println ("SQL COPY EVENT ID " + eventId);
+							System.err.println ("MYSQL COPY EVENT ID " + eventId);
 							ReadJsonFromMySql.copy (eventId);
 						}
 					}

@@ -2,6 +2,7 @@ package feedback;
 
 import java.util.ArrayList;
 
+//Success when converting calamp to scope
 public class Success {
 	
 	private String scopeString;
@@ -33,7 +34,7 @@ public class Success {
 		return someMessageToSend;
 	}
 	
-	public int countItems (){
+	public int countMessages (){
 		int n = scopeMessages.size ();
 		
 		if (successCodes.size () != n) System.err.println ("Error. Longitudes diferentes");

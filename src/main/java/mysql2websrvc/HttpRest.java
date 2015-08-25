@@ -1,6 +1,8 @@
 package mysql2websrvc;
 
 import java.net.URL;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.io.*;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -30,6 +32,7 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 
 import feedback.HttpOutput;
+import feedback.Success;
 
 public class HttpRest {
 	public static String urlscope = "https://us.scopemp.net/Scope.MProfiler.ThirdPartyGateway.Api/api/v1/messages";
@@ -150,9 +153,34 @@ public class HttpRest {
 			} finally {
 				response.close();
 			}
-		}
+		}			
+	}
+	
+	public static String sendSingleCalampMessage (final String calampMessage){
+		DataObject dObj = ReadJsonFromMySql.json2Obj(calampMessage);
+		ArrayList <DataObject> data = new ArrayList ();
+		data.add (dObj);
+		Success success;
+		String ans = "";
+		
+		try {
+			success = Calamp2Scope.toScopeString(data);
+			String scope = success.getScopeString();
+			HttpOutput out = HttpRest.httpsClientC(scope);
+			ans = out.getOutput ();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		
 		
 		
+		return ans;
 	}
 }

@@ -41,6 +41,7 @@ public class Calamp2Scope {
 	public static int getGeneralStatus(MessageContents message)
 	{
 		int ans = 0;
+		
 		//Ignicion
 		if (message.getInputs().getIgnition().compareTo("on") == 0) {
 			ans |= GeneralStatusType.GENERAL_STATUS_IGNITION_VALUE;
@@ -49,15 +50,16 @@ public class Calamp2Scope {
 		if (Integer.parseInt(message.getEventCode()) == CalampEventCode.OffMainPower){
 			ans |= GeneralStatusType.GENERAL_STATUS_BATTERY_VALUE;
 		}
+		
 		return ans;
 	}
 
 	public static Success toScopeString (ArrayList <DataObject> datos) throws ParseException, IOException{
 		
-		String DATE_FORMAT = "yyyyMMdd";
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-		Calendar c1 = Calendar.getInstance(); // today
-		final String filename = "Headers_" + sdf.format(c1.getTime()) + ".txt";
+		String dateFormat = "yyyyMMdd";
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+		Calendar calendar = Calendar.getInstance(); // today
+		final String filename = "Headers_" + sdf.format(calendar.getTime()) + ".txt";
 		
 		bw = new BufferedWriter (new FileWriter (filename, true));
 		
@@ -95,7 +97,7 @@ public class Calamp2Scope {
 			int inputStatus = calampMessage.getInputs().toInteger();
 			double latitude = Double.parseDouble(calampMessage.getLatitude());
 			double longitude = Double.parseDouble(calampMessage.getLongitude());
-			int odometer = 0;
+			int odometer = 0; //Extraer de acumulador
 			int outputStatus = 0;
 			int speed = (int) speedDouble;
 			int templateId = idAndDescription.getTemplateId ();
@@ -110,6 +112,9 @@ public class Calamp2Scope {
 			int tripDistance;
 			int tripDuration;
 			int tripIdentifier;
+			
+			if (accumulators.length >= 8)
+				odometer = (int) accumulators [7] / 1000; //In km
 			
 			commonHeader = EventHeader.newBuilder()
 					.setDescription(description)
@@ -141,7 +146,7 @@ public class Calamp2Scope {
 				successCode = "invalid fix";
 			}*/
 			
-			//Debug
+			//Mostrar tipo de evento
 			if (templateId != ScopeEventCode.UnknownEvent)
 				System.err.println ("Scope event " + templateId + " (Calamp event " + 
 				calampEventCode + "): " + description);
@@ -287,7 +292,7 @@ public class Calamp2Scope {
 				encodedBody = Base64.encodeBase64String(bytes);
 				message.setEncodedBody (encodedBody);
 				response.addMessage (message);
-				saveHeader (gson.toJson(commonHeader));
+				//saveHeader (gson.toJson(commonHeader));
 				successCode = "sent";
 				++itemsToSend;
 				scopeMessageList.add(gson.toJson(message));
