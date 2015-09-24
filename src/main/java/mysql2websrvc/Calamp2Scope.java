@@ -53,6 +53,27 @@ public class Calamp2Scope {
 		
 		return ans;
 	}
+	
+	public static String convert (final String calampString){
+		String scopeString = null;
+		DataObject calampObject = new Gson ().fromJson(calampString, DataObject.class);
+		ArrayList <DataObject> calampObjects = new ArrayList ();
+		
+		calampObjects.add(calampObject);
+		
+		try {
+			Success success = toScopeString (calampObjects);
+			scopeString = success.getScopeString();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return scopeString;
+	}
 
 	public static Success toScopeString (ArrayList <DataObject> datos) throws ParseException, IOException{
 		
@@ -64,7 +85,7 @@ public class Calamp2Scope {
 		bw = new BufferedWriter (new FileWriter (filename, true));
 		
 		//Consideraciones para crear los tiempos.
-		long timeAdjust = 4 * 3600;
+		long timeAdjust = 3 * 3600;
 		Gson gson = new Gson ();
 		final SimpleDateFormat sdfu  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 		final Date utc1970 = sdfu.parse("1970-01-01 00:00:00");
