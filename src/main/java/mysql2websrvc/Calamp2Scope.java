@@ -85,7 +85,7 @@ public class Calamp2Scope {
 		bw = new BufferedWriter (new FileWriter (filename, true));
 		
 		//Consideraciones para crear los tiempos.
-		long timeAdjust = 3 * 3600;
+		long timeAdjust = 5 * 3600;
 		Gson gson = new Gson ();
 		final SimpleDateFormat sdfu  = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 		final Date utc1970 = sdfu.parse("1970-01-01 00:00:00");
