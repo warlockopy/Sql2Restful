@@ -35,8 +35,8 @@ import feedback.HttpOutput;
 import feedback.Success;
 
 public class HttpRest {
-	public static String urlscope = "https://us.scopemp.net/Scope.MProfiler.ThirdPartyGateway.Api/api/v1/messages";
-	public static String ScopeHost = "us.scopemp.net";
+	public static String urlscope = "https://global.scopemp.net/Scope.MProfiler.ThirdPartyGateway.Api/api/v1/messages";
+	public static String ScopeHost = "global.scopemp.net";
 	public static String ScopePath = "/Scope.MProfiler.ThirdPartyGateway.Api/api/v1/messages";
 	public static String username = "PYLS", password = "Dn1f8C5XeJj42AzG";
 	
